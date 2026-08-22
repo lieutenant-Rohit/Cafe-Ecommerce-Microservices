@@ -39,20 +39,15 @@ public class SecurityConfig {
                 )
 
                 .authorizeHttpRequests(auth -> auth
-
-                        // Login and registration
                         .requestMatchers("/api/auth/**")
                         .permitAll()
 
-                        // Logged-in customer can access own profile
                         .requestMatchers("/api/users/me")
                         .hasRole("CUSTOMER")
 
-                        // Admin-only user management
                         .requestMatchers("/api/users/**")
                         .hasRole("ADMIN")
 
-                        // Everything else requires authentication
                         .anyRequest()
                         .authenticated()
                 )

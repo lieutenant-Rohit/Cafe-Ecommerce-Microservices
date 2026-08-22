@@ -36,7 +36,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String authHeader =
                 request.getHeader("Authorization");
 
-        // No JWT provided
         if (authHeader == null ||
                 !authHeader.startsWith("Bearer ")) {
 
@@ -44,17 +43,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        // Remove "Bearer "
         String token = authHeader.substring(7);
 
-        // Validate JWT
         if (!jwtService.isTokenValid(token)) {
 
             filterChain.doFilter(request, response);
             return;
         }
 
-        // Extract user identity and role
         String email =
                 jwtService.extractEmail(token);
 
@@ -73,7 +69,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         .buildDetails(request)
         );
 
-        // Tell Spring Security user is authenticated
         SecurityContextHolder
                 .getContext()
                 .setAuthentication(authentication);
