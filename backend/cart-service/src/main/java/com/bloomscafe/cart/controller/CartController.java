@@ -43,6 +43,17 @@ public class CartController {
         );
     }
 
+    // GET: http://localhost:8083/api/carts/user/3
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<Cart> getCartByUserId(
+            @PathVariable Long userId
+    ) {
+
+        return ResponseEntity.ok(
+                cartService.getCartByUserId(userId)
+        );
+    }
+
     // POST: http://localhost:8083/api/carts/items?productId=2&quantity=1
     @PostMapping("/items")
     public ResponseEntity<CartItem> addItem(

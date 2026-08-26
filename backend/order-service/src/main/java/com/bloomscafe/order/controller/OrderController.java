@@ -2,10 +2,11 @@ package com.bloomscafe.order.controller;
 
 import com.bloomscafe.order.client.CartResponse;
 import com.bloomscafe.order.entity.Order;
-import com.bloomscafe.order.entity.OrderItem;
 import com.bloomscafe.order.entity.OrderStatus;
 import com.bloomscafe.order.service.OrderService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,43 +21,62 @@ public class OrderController {
         this.orderService = orderService;
     }
 
-    @GetMapping("/checkout/{userId}")
+    // GET: http://localhost:8084/api/orders/checkout
+    @GetMapping("/checkout")
     public ResponseEntity<CartResponse> getCartForCheckout(
-            @PathVariable Long userId
+            Authentication authentication
     ) {
+
+        Long userId = Long.parseLong(authentication.getName());
+
         return ResponseEntity.ok(
                 orderService.getCartForCheckout(userId)
         );
     }
 
-    @PostMapping("/user/{userId}")
+    // POST: http://localhost:8084/api/orders
+    @PostMapping
     public ResponseEntity<Order> createOrder(
-            @PathVariable Long userId,
-            @RequestBody List<OrderItem> items
+            Authentication authentication
     ) {
+
+        Long userId = Long.parseLong(authentication.getName());
+
         return ResponseEntity.ok(
-                orderService.createOrder(userId, items)
+                orderService.createOrder(userId)
         );
     }
 
+    // GET: http://localhost:8084/api/orders/2
     @GetMapping("/{orderId}")
     public ResponseEntity<Order> getOrderById(
+            Authentication authentication,
             @PathVariable Long orderId
     ) {
+
+        Long userId = Long.parseLong(authentication.getName());
+        boolean isAdmin = authentication.getAuthorities()
+                .contains(new SimpleGrantedAuthority("ROLE_ADMIN"));
+
         return ResponseEntity.ok(
-                orderService.getOrderById(orderId)
+                orderService.getOrderById(orderId, userId, isAdmin)
         );
     }
 
-    @GetMapping("/user/{userId}")
+    // GET: http://localhost:8084/api/orders
+    @GetMapping
     public ResponseEntity<List<Order>> getOrdersByUserId(
-            @PathVariable Long userId
+            Authentication authentication
     ) {
+
+        Long userId = Long.parseLong(authentication.getName());
+
         return ResponseEntity.ok(
                 orderService.getOrdersByUserId(userId)
         );
     }
 
+    // PATCH: http://localhost:8084/api/orders/2/status?status=CONFIRMED  (ADMIN only)
     @PatchMapping("/{orderId}/status")
     public ResponseEntity<Order> updateOrderStatus(
             @PathVariable Long orderId,
@@ -70,6 +90,7 @@ public class OrderController {
         );
     }
 
+    // DELETE: http://localhost:8084/api/orders/2  (ADMIN only)
     @DeleteMapping("/{orderId}")
     public ResponseEntity<Void> deleteOrder(
             @PathVariable Long orderId
