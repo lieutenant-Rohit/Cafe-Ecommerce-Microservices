@@ -39,3 +39,4 @@ export default function Pagination({ page, totalPages, onPageChange }: Paginatio
     </div>
   )
 }
+

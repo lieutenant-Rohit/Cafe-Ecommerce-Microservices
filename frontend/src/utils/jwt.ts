@@ -25,3 +25,4 @@ export function getTokenUserId(token: string): number | null {
   const decoded = decodeToken(token)
   return decoded?.userId ?? null
 }
+

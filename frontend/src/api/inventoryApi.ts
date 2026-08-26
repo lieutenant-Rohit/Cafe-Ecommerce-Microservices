@@ -24,3 +24,4 @@ export async function releaseStock(productId: number, quantity: number): Promise
   const { data } = await axiosClient.post(`/api/inventory/${productId}/release?quantity=${quantity}`)
   return data
 }
+

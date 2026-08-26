@@ -24,3 +24,4 @@ export async function fetchUsers(): Promise<User[]> {
 export async function deleteUser(id: number): Promise<void> {
   await axiosClient.delete(`/api/users/${id}`)
 }
+

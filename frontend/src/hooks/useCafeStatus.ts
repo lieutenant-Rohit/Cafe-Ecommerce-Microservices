@@ -49,3 +49,4 @@ export function useCafeStatus(): CafeStatus {
 
   return { isOpen, statusText, hoursToday, greeting, tickerLead }
 }
+

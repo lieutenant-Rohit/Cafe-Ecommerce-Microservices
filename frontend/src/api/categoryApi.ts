@@ -21,3 +21,4 @@ export async function updateCategory(id: number, name: string): Promise<Category
 export async function deleteCategory(id: number): Promise<void> {
   await axiosClient.delete(`/api/categories/${id}`)
 }
+

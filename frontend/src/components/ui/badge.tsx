@@ -34,3 +34,4 @@ function Badge({ className, variant, asChild = false, ...props }: BadgeProps) {
 }
 
 export { Badge, badgeVariants }
+

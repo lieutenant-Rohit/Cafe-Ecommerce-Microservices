@@ -28,3 +28,4 @@ export async function removeFromCart(productId: number): Promise<void> {
 export async function clearCart(): Promise<void> {
   await axiosClient.delete('/api/carts/items')
 }
+

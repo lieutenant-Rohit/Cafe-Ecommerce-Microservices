@@ -26,3 +26,4 @@ export default function Parallax({ children, from = -50, to = 50, className, sty
     </div>
   )
 }
+

@@ -42,3 +42,4 @@ export default function Tilt({ children, intensity = 8, className }: TiltProps) 
     </motion.div>
   )
 }
+

@@ -40,3 +40,4 @@ export async function updateProduct(id: number, product: { name: string; price: 
 export async function deleteProduct(id: number): Promise<void> {
   await axiosClient.delete(`/api/products/${id}`)
 }
+

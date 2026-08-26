@@ -110,3 +110,4 @@ export function Magnetic({
     </motion.div>
   );
 }
+

@@ -29,3 +29,4 @@ export async function updateOrderStatus(orderId: number, status: OrderStatus): P
 export async function deleteOrder(orderId: number): Promise<void> {
   await axiosClient.delete(`/api/orders/${orderId}`)
 }
+

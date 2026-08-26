@@ -16,3 +16,4 @@ export default function Grain({ opacity = 0.05, className }: GrainProps) {
     />
   )
 }
+

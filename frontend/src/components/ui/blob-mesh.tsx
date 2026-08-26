@@ -56,3 +56,4 @@ export default function BlobMesh({ className, variant = 'warm', blend = 'multipl
     </div>
   )
 }
+
