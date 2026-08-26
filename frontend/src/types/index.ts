@@ -42,6 +42,7 @@ export interface CartItem {
   id: number
   productId: number
   quantity: number
+  product: Product
 }
 
 export interface Cart {

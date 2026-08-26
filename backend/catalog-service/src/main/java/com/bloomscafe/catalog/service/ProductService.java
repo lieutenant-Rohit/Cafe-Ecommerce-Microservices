@@ -13,6 +13,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
+import java.util.List;
+
 @Service
 public class ProductService {
 
@@ -22,6 +25,12 @@ public class ProductService {
     public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository) {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
+    }
+
+    @Cacheable(value = "product", key = "'batch:' + T(java.util.Arrays).toString(#ids.toArray())")
+    @Transactional(readOnly = true)
+    public List<Product> getProductsByIds(Collection<Long> ids) {
+        return productRepository.findByIdIn(ids);
     }
 
     @Cacheable(value = "products", key = "#page + ':' + #size")

@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/products")
 public class ProductController {
@@ -15,6 +17,13 @@ public class ProductController {
 
     public ProductController(ProductService productService) {
         this.productService = productService;
+    }
+
+    // GET: http://localhost:8082/api/products/batch?ids=1,2,3
+    @GetMapping("/batch")
+    public ResponseEntity<List<Product>> getProductsByIds(
+            @RequestParam List<Long> ids) {
+        return ResponseEntity.ok(productService.getProductsByIds(ids));
     }
 
     // GET: http://localhost:8082/api/products?page=0&size=10

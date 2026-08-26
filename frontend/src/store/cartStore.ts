@@ -1,7 +1,6 @@
 import { create } from 'zustand'
 import type { Product } from '../types'
 import * as cartApi from '../api/cartApi'
-import { fetchProductById } from '../api/productApi'
 import useAuthStore from './authStore'
 
 export interface CartItem {
@@ -23,18 +22,10 @@ interface CartState {
   totalAmount: () => number
 }
 
-async function enrichCartItems(items: { productId: number; quantity: number }[]): Promise<CartItem[]> {
-  const enriched = await Promise.all(
-    items.map(async (item) => {
-      try {
-        const product = await fetchProductById(item.productId)
-        return { product, quantity: item.quantity }
-      } catch {
-        return null
-      }
-    }),
-  )
-  return enriched.filter((item): item is CartItem => item !== null)
+function mapBackendItems(items: { productId: number; quantity: number; product: Product }[]): CartItem[] {
+  return items
+    .filter((item) => item.product != null)
+    .map((item) => ({ product: item.product, quantity: item.quantity }))
 }
 
 const useCartStore = create<CartState>((set, get) => ({
@@ -50,9 +41,8 @@ const useCartStore = create<CartState>((set, get) => ({
       } catch {
         cart = await cartApi.createCart()
       }
-      const enriched = await enrichCartItems(cart.items)
       set({
-        items: enriched,
+        items: mapBackendItems(cart.items),
         cartId: cart.id,
         backendReady: true,
       })
@@ -65,11 +55,9 @@ const useCartStore = create<CartState>((set, get) => ({
     const { isAuthenticated } = useAuthStore.getState()
     if (isAuthenticated) {
       try {
-        await cartApi.addToCart(product.id, quantity)
-        const cart = await cartApi.fetchCart()
-        const enriched = await enrichCartItems(cart.items)
+        const cart = await cartApi.addToCart(product.id, quantity)
         set({
-          items: enriched,
+          items: mapBackendItems(cart.items),
           cartId: cart.id,
         })
         return
@@ -96,9 +84,8 @@ const useCartStore = create<CartState>((set, get) => ({
       try {
         await cartApi.removeFromCart(productId)
         const cart = await cartApi.fetchCart()
-        const enriched = await enrichCartItems(cart.items)
         set({
-          items: enriched,
+          items: mapBackendItems(cart.items),
           cartId: cart.id,
         })
         return
@@ -116,11 +103,9 @@ const useCartStore = create<CartState>((set, get) => ({
     const { isAuthenticated } = useAuthStore.getState()
     if (isAuthenticated) {
       try {
-        await cartApi.updateCartItem(productId, quantity)
-        const cart = await cartApi.fetchCart()
-        const enriched = await enrichCartItems(cart.items)
+        const cart = await cartApi.updateCartItem(productId, quantity)
         set({
-          items: enriched,
+          items: mapBackendItems(cart.items),
           cartId: cart.id,
         })
         return
@@ -150,4 +135,3 @@ const useCartStore = create<CartState>((set, get) => ({
 }))
 
 export default useCartStore
-

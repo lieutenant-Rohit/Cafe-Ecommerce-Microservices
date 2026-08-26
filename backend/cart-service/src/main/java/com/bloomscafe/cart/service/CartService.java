@@ -1,16 +1,19 @@
 package com.bloomscafe.cart.service;
 
 import com.bloomscafe.cart.client.CatalogClient;
+import com.bloomscafe.cart.client.ProductResponse;
+import com.bloomscafe.cart.dto.CartResponse;
 import com.bloomscafe.cart.entity.Cart;
 import com.bloomscafe.cart.entity.CartItem;
 import com.bloomscafe.cart.exception.ProductNotFoundException;
 import com.bloomscafe.cart.repo.CartItemRepository;
 import com.bloomscafe.cart.repo.CartRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class CartService {
@@ -24,14 +27,15 @@ public class CartService {
         this.catalogClient = catalogClient;
     }
 
-    public Cart getCartByUserId(Long userId){
-        return cartRepository
+    public CartResponse getCartByUserId(Long userId){
+        Cart cart = cartRepository
                 .findByUserId(userId)
                 .orElseThrow(()->
                         new RuntimeException("Cart not found for user: " + userId));
+        return enrichCart(cart);
     }
 
-    public Cart createCart(Long userId){
+    public CartResponse createCart(Long userId){
         if(cartRepository.findByUserId(userId).isPresent()){
             throw new RuntimeException("Cart already exists for user: " + userId);
         }
@@ -39,11 +43,12 @@ public class CartService {
         Cart cart = new Cart();
         cart.setUserId(userId);
 
-        return cartRepository.save(cart);
+        Cart saved = cartRepository.save(cart);
+        return new CartResponse(saved.getId(), saved.getUserId(), List.of());
     }
 
     @Transactional
-    public CartItem addItem(Long userId, Long productId, Integer quantity){
+    public CartResponse addItem(Long userId, Long productId, Integer quantity){
 
         if(!catalogClient.productExists(productId)){
             throw new ProductNotFoundException("Product not found: " + productId);
@@ -65,23 +70,25 @@ public class CartService {
             cartItem.setProductId(productId);
             cartItem.setQuantity(quantity);
         }
-        return cartItemRepository.save(cartItem);
+        cartItemRepository.save(cartItem);
+        return getCartByUserId(userId);
     }
 
     @Transactional
-    public CartItem updateItem(Long userId, Long productI, Integer quantity){
+    public CartResponse updateItem(Long userId, Long productId, Integer quantity){
         Cart cart = cartRepository
                 .findByUserId(userId)
                 .orElseThrow(()->
                         new RuntimeException("Cart not found"));
 
         CartItem cartItem = cartItemRepository
-                .findByCartIdAndProductId(cart.getId(), productI)
+                .findByCartIdAndProductId(cart.getId(), productId)
                 .orElseThrow(()->
                         new RuntimeException("Cart item not found"));
 
         cartItem.setQuantity(quantity);
-        return cartItemRepository.save(cartItem);
+        cartItemRepository.save(cartItem);
+        return getCartByUserId(userId);
     }
 
     @Transactional
@@ -107,4 +114,24 @@ public class CartService {
         cartItemRepository.deleteByCartId(cart.getId());
     }
 
+    private CartResponse enrichCart(Cart cart){
+        List<Long> productIds = cart.getItems().stream()
+                .map(CartItem::getProductId)
+                .toList();
+
+        Map<Long, ProductResponse> productMap = catalogClient.getProductsByIds(productIds)
+                .stream()
+                .collect(Collectors.toMap(ProductResponse::id, p -> p));
+
+        List<CartResponse.CartItemResponse> items = cart.getItems().stream()
+                .map(item -> new CartResponse.CartItemResponse(
+                        item.getId(),
+                        item.getProductId(),
+                        item.getQuantity(),
+                        productMap.get(item.getProductId())
+                ))
+                .toList();
+
+        return new CartResponse(cart.getId(), cart.getUserId(), items);
+    }
 }

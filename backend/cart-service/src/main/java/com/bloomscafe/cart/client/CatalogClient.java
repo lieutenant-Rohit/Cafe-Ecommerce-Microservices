@@ -1,7 +1,10 @@
 package com.bloomscafe.cart.client;
 
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
+
+import java.util.List;
 
 @Component
 public class CatalogClient {
@@ -25,5 +28,19 @@ public class CatalogClient {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    public List<ProductResponse> getProductsByIds(List<Long> ids){
+        if(ids.isEmpty()){
+            return List.of();
+        }
+        return restClient
+                .get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/api/products/batch")
+                        .queryParam("ids", ids)
+                        .build())
+                .retrieve()
+                .body(new ParameterizedTypeReference<>(){});
     }
 }

@@ -1,7 +1,6 @@
 package com.bloomscafe.cart.controller;
 
-import com.bloomscafe.cart.entity.Cart;
-import com.bloomscafe.cart.entity.CartItem;
+import com.bloomscafe.cart.dto.CartResponse;
 import com.bloomscafe.cart.service.CartService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -19,7 +18,7 @@ public class CartController {
 
     // POST: http://localhost:8083/api/carts
     @PostMapping
-    public ResponseEntity<Cart> createCart(
+    public ResponseEntity<CartResponse> createCart(
             Authentication authentication
     ) {
 
@@ -32,7 +31,7 @@ public class CartController {
 
     // GET: http://localhost:8083/api/carts
     @GetMapping
-    public ResponseEntity<Cart> getCart(
+    public ResponseEntity<CartResponse> getCart(
             Authentication authentication
     ) {
 
@@ -45,7 +44,7 @@ public class CartController {
 
     // GET: http://localhost:8083/api/carts/user/3
     @GetMapping("/user/{userId}")
-    public ResponseEntity<Cart> getCartByUserId(
+    public ResponseEntity<CartResponse> getCartByUserId(
             @PathVariable Long userId
     ) {
 
@@ -56,7 +55,7 @@ public class CartController {
 
     // POST: http://localhost:8083/api/carts/items?productId=2&quantity=1
     @PostMapping("/items")
-    public ResponseEntity<CartItem> addItem(
+    public ResponseEntity<CartResponse> addItem(
             Authentication authentication,
             @RequestParam Long productId,
             @RequestParam Integer quantity
@@ -75,7 +74,7 @@ public class CartController {
 
     // PUT: http://localhost:8083/api/carts/items/2?quantity=3
     @PutMapping("/items/{productId}")
-    public ResponseEntity<CartItem> updateItem(
+    public ResponseEntity<CartResponse> updateItem(
             Authentication authentication,
             @PathVariable Long productId,
             @RequestParam Integer quantity
