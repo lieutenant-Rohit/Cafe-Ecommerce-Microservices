@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Coffee, Croissant, Flame, Timer, ArrowRight, ArrowUpRight, Sparkles } from 'lucide-react'
+import { Coffee, Croissant, Flame, Timer, ArrowRight, ArrowUpRight, Sparkles, Star, Heart, Zap, Leaf } from 'lucide-react'
 import { Hero2 } from '../components/ui/hero-2'
 import Marquee from '../components/ui/marquee'
 import Reveal from '../components/ui/reveal'
@@ -17,6 +17,13 @@ import { WordRotate } from '../components/motion-primitives/word-rotate'
 import { AnimatedGroup } from '../components/motion-primitives/animated-group'
 import CoffeeMeter from '../components/ui/coffee-meter'
 import { useCafeStatus } from '../hooks/useCafeStatus'
+import ParticleField from '../components/particle-field'
+import TextScramble from '../components/text-scramble'
+import GlitchText from '../components/glitch-text'
+import LiquidBlob from '../components/liquid-blob'
+import OrbitingElements from '../components/orbiting-elements'
+import ScrollRevealImage from '../components/scroll-reveal-image'
+import MagneticElement from '../components/magnetic-element'
 
 const tickerItems = [
   'Espresso pulled to order',
@@ -34,14 +41,20 @@ const pillars = [
   {
     title: 'The Morning Bake',
     desc: 'Croissants folded to twenty-seven layers and baked at five, while the street is still dark. One batch of rolls a day — after that, the case is empty.',
+    icon: Croissant,
+    color: 'from-amber-100 to-orange-50',
   },
   {
     title: 'The Sandwich Counter',
     desc: 'Grilled cheese on thick sourdough, turkey clubs pressed and cut on the diagonal. Between 11:30 and close, it\u2019s the busiest seat in the house.',
+    icon: Flame,
+    color: 'from-rose-100 to-red-50',
   },
   {
     title: 'The Breakfast Shelf',
     desc: 'Blueberry muffins out of the oven by 5:30 — warm, crusty-topped, and gone before the first meeting ends.',
+    icon: Coffee,
+    color: 'from-emerald-100 to-green-50',
   },
 ]
 
@@ -99,6 +112,12 @@ export default function Home() {
   return (
     <div>
       <Hero2 />
+
+      {/* Particle overlay on hero */}
+      <div className="fixed inset-0 pointer-events-none z-[5] opacity-40">
+        <ParticleField />
+      </div>
+
       <CoffeeMeter />
 
       {/* Masthead strip */}
@@ -125,13 +144,15 @@ export default function Home() {
       {/* 02 — What we make */}
       <section className="relative overflow-hidden bg-cream-50 py-20 md:py-28">
         <Grain opacity={0.04} />
+        <LiquidBlob className="absolute -top-40 -right-40 opacity-20" color="#A94E2C" size={600} />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <Reveal>
             <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
               <div className="max-w-2xl">
                 <Kicker>What we make</Kicker>
                 <h2 className="mt-4 font-display text-4xl md:text-6xl font-semibold leading-[1.02] text-coffee-900">
-                  Three arts, practiced <em className="italic text-primary-600">every morning.</em>
+                  <TextScramble text="Three arts, practiced" speed={25} tag="span" />{' '}
+                  <em className="italic text-primary-600">every morning.</em>
                 </h2>
               </div>
               <div className="md:text-right max-w-xs">
@@ -145,16 +166,15 @@ export default function Home() {
             </div>
           </Reveal>
 
-          {/* Photo spread */}
+          {/* Photo spread with scroll reveal masks */}
           <div className="mt-14 grid md:grid-cols-12 gap-6 md:gap-8">
             <div className="md:col-span-6 lg:col-span-7 relative overflow-hidden rounded-3xl group">
-              <Parallax from={0} to={-70} className="h-full w-full">
-                <img
-                  src={photos[0].src}
-                  alt={photos[0].caption}
-                  className="w-full h-[26rem] md:h-full min-h-[26rem] object-cover scale-[1.35] group-hover:scale-[1.45] transition-transform duration-700"
-                />
-              </Parallax>
+              <ScrollRevealImage
+                src={photos[0].src}
+                alt={photos[0].caption}
+                className="h-[26rem] md:h-full min-h-[26rem]"
+                direction="up"
+              />
               <figcaption className="absolute bottom-0 inset-x-0 z-[2] bg-coffee-950/75 backdrop-blur-sm text-cream-100 px-5 py-3.5 flex items-center justify-between gap-4">
                 <span className="text-[10px] font-semibold uppercase tracking-[0.25em]">{photos[0].caption}</span>
                 <span className="font-display italic text-cream-200/80 text-sm">{photos[0].note}</span>
@@ -166,13 +186,12 @@ export default function Home() {
                   key={photo.src}
                   className={`relative overflow-hidden rounded-3xl group ${i === 0 ? 'rotate-1' : '-rotate-1'} hover:rotate-0 transition-transform duration-500`}
                 >
-                  <Parallax from={0} to={-50} className="h-full w-full">
-                    <img
-                      src={photo.src}
-                      alt={photo.caption}
-                      className="w-full h-56 object-cover scale-[1.3] group-hover:scale-[1.4] transition-transform duration-700"
-                    />
-                  </Parallax>
+                  <ScrollRevealImage
+                    src={photo.src}
+                    alt={photo.caption}
+                    className="h-56"
+                    direction={i === 0 ? 'left' : 'right'}
+                  />
                   <figcaption className="absolute bottom-0 inset-x-0 z-[2] bg-cream-50/90 backdrop-blur-sm text-coffee-900 px-4 py-2.5 flex items-center justify-between gap-4 border-t border-coffee-900/10">
                     <span className="text-[9px] font-semibold uppercase tracking-[0.22em]">{photo.caption}</span>
                     <span className="font-display italic text-coffee-500 text-[11px]">{photo.note}</span>
@@ -182,15 +201,20 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Pillars */}
+          {/* Pillars with gradient backgrounds */}
           <AnimatedGroup className="mt-16 md:mt-20 grid md:grid-cols-3 gap-y-12 md:gap-x-10 md:divide-x md:divide-coffee-900/10" stagger={0.12}>
             {pillars.map((p, i) => (
               <div key={p.title} className="group md:px-10 first:md:pl-0 last:md:pr-0">
+                <MagneticElement strength={0.15}>
+                  <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${p.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
+                    <p.icon className="w-6 h-6 text-coffee-700" />
+                  </div>
+                </MagneticElement>
                 <span className="block font-display text-[5.5rem] leading-[0.75] text-coffee-900/[0.05] select-none">
                   {String(i + 1).padStart(2, '0')}
                 </span>
                 <h3 className="mt-5 font-display text-2xl font-semibold text-coffee-900 group-hover:text-primary-700 transition-colors">
-                  {p.title}
+                  <GlitchText text={p.title} trigger="hover" tag="span" />
                 </h3>
                 <p className="mt-3 text-coffee-500 leading-relaxed">{p.desc}</p>
                 <Link
@@ -206,7 +230,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 03 — Fact box */}
+      {/* 03 — Fact box with orbiting elements */}
       <section className="relative overflow-hidden bg-primary-600 text-cream-50 py-20 md:py-24 border-y border-coffee-900/10">
         <BlobMesh variant="cool" className="opacity-50" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -220,11 +244,23 @@ export default function Home() {
                 <p className="mt-5 text-cream-100/85 max-w-md leading-relaxed">
                   The small metrics that set the day&apos;s pace — logged every morning, stuck to every afternoon.
                 </p>
+                <div className="mt-8">
+                  <OrbitingElements
+                    radius={80}
+                    duration={25}
+                    elements={[
+                      { icon: <Coffee className="w-4 h-4 text-cream-50" />, label: 'Brew', color: 'bg-primary-700/50 border-primary-600' },
+                      { icon: <Croissant className="w-4 h-4 text-cream-50" />, label: 'Bake', color: 'bg-primary-700/50 border-primary-600' },
+                      { icon: <Flame className="w-4 h-4 text-cream-50" />, label: 'Grill', color: 'bg-primary-700/50 border-primary-600' },
+                      { icon: <Leaf className="w-4 h-4 text-cream-50" />, label: 'Blend', color: 'bg-primary-700/50 border-primary-600' },
+                    ]}
+                  />
+                </div>
               </div>
             </Reveal>
             <div className="grid grid-cols-2 gap-x-10 gap-y-12">
               {stats.map((s) => (
-                <div key={s.label} className="group">
+                <div key={s.label} className="group" >
                   <div className="font-display text-5xl md:text-6xl font-semibold text-cream-50">
                     <NumberTicker value={s.value} suffix={s.suffix} duration={1.6} />
                   </div>
@@ -242,13 +278,15 @@ export default function Home() {
       {/* 04 — Featured */}
       <section className="relative overflow-hidden bg-cream-100 py-20 md:py-28">
         <BlobMesh variant="warm" className="opacity-30" />
+        <LiquidBlob className="absolute -bottom-60 -left-60 opacity-15" color="#DBEDE2" size={500} />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
             <Reveal>
               <div className="max-w-xl">
                 <Kicker>This week&apos;s staples</Kicker>
                 <h2 className="mt-4 font-display text-4xl md:text-5xl font-semibold leading-[1.05] text-coffee-900">
-                  Featured, <em className="italic text-primary-600">until they&apos;re gone.</em>
+                  <GlitchText text="Featured," trigger="hover" tag="span" />{' '}
+                  <em className="italic text-primary-600">until they&apos;re gone.</em>
                 </h2>
                 <p className="mt-4 text-coffee-500 leading-relaxed">
                   The four things we never take off the menu — until they&apos;re gone.
@@ -258,7 +296,7 @@ export default function Home() {
             <Reveal delay={0.1}>
               <Link
                 to="/menu"
-                className="hidden md:inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.25em] text-primary-600 hover:text-primary-500 transition-colors"
+                  className="hidden md:inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.25em] text-primary-600 hover:text-primary-500 transition-colors"
               >
                 Full menu
                 <ArrowRight className="w-4 h-4" />
@@ -342,7 +380,8 @@ export default function Home() {
             <div className="text-center">
               <Kicker>From dark oven to open doors</Kicker>
               <h2 className="mt-4 font-display text-4xl md:text-5xl font-semibold leading-[1.05] text-coffee-900">
-                The morning, <em className="italic text-primary-600">step by step.</em>
+                <TextScramble text="The morning," speed={20} tag="span" />{' '}
+                <em className="italic text-primary-600">step by step.</em>
               </h2>
               <p className="mt-4 text-coffee-500 max-w-md mx-auto leading-relaxed">
                 Four moves between dormant ovens and your first sip — clocked by the same crew every day.
@@ -362,9 +401,11 @@ export default function Home() {
                     </h3>
                     <p className="mt-1.5 text-sm text-coffee-500 leading-relaxed max-w-xl">{step.desc}</p>
                   </div>
-                  <div className="hidden md:flex w-12 h-12 rounded-full bg-white border border-coffee-900/10 items-center justify-center shadow-sm group-hover:border-primary-300 group-hover:shadow-[0_0_0_6px_rgba(211,126,88,0.08)] transition-all duration-300">
-                    <step.icon className="w-5 h-5 text-primary-600 group-hover:text-accent-600 group-hover:rotate-12 transition-all duration-300" />
-                  </div>
+                  <MagneticElement strength={0.2}>
+                    <div className="hidden md:flex w-12 h-12 rounded-full bg-white border border-coffee-900/10 items-center justify-center shadow-sm group-hover:border-primary-300 group-hover:shadow-[0_0_0_6px_rgba(211,126,88,0.08)] transition-all duration-300">
+                      <step.icon className="w-5 h-5 text-primary-600 group-hover:text-accent-600 group-hover:rotate-12 transition-all duration-300" />
+                    </div>
+                  </MagneticElement>
                 </div>
               </Reveal>
             ))}
@@ -401,7 +442,12 @@ export default function Home() {
                 {String(i + 1).padStart(2, '0')}
               </span>
               <p className="mt-6 font-display italic text-coffee-800 leading-relaxed line-clamp-4">{t.text}</p>
-              <p className="mt-6 text-[11px] font-semibold uppercase tracking-[0.2em] text-coffee-400">— {t.author}</p>
+              <div className="mt-6 flex items-center gap-1">
+                {[...Array(5)].map((_, j) => (
+                  <Star key={j} className="w-3.5 h-3.5 fill-accent-500 text-accent-500" />
+                ))}
+              </div>
+              <p className="mt-3 text-[11px] font-semibold uppercase tracking-[0.2em] text-coffee-400">— {t.author}</p>
             </div>
           ))}
         </Marquee>
@@ -432,6 +478,7 @@ export default function Home() {
         </Parallax>
         <BlobMesh variant="deep" className="opacity-80" />
         <Grain opacity={0.1} className="z-[6]" />
+        <LiquidBlob className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-10" color="#DBEDE2" size={700} />
         <div className="relative max-w-3xl mx-auto px-4 sm:px-6 text-center z-10">
           <Reveal>
             <div className="flex justify-center mb-6">
@@ -480,4 +527,3 @@ export default function Home() {
     </div>
   )
 }
-
