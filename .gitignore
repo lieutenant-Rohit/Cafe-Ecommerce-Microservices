@@ -1,0 +1,13 @@
+# Environment secrets
+.env
+
+# IDE
+.idea/
+
+# OS
+.DS_Store
+
+# Build outputs
+backend/**/target/
+frontend/dist/
+frontend/node_modules/

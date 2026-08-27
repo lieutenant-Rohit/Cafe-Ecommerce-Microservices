@@ -7,7 +7,6 @@ import com.bloomscafe.order.entity.OrderStatus;
 import com.bloomscafe.order.event.OrderCreatedEvent;
 import com.bloomscafe.order.event.OrderEventPublisher;
 import com.bloomscafe.order.repo.OrderRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -41,7 +40,6 @@ public class OrderService {
         return cartClient.getCart(userId);
     }
 
-    @Transactional
     public Order createOrder(Long userId) {
 
         // 1. Get the user's cart

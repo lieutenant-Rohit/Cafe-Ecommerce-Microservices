@@ -1,5 +1,6 @@
 package com.bloomscafe.order.client;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -10,9 +11,11 @@ public class CartClient {
 
     private final RestClient restClient;
 
-    public CartClient(RestClient.Builder builder) {
+    public CartClient(
+            RestClient.Builder builder,
+            @Value("${cart.service.url:http://localhost:8083}") String baseUrl) {
         this.restClient = builder
-                .baseUrl("http://localhost:8083")
+                .baseUrl(baseUrl)
                 .build();
     }
 

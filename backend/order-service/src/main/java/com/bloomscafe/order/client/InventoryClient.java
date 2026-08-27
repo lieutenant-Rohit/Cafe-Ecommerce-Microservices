@@ -1,5 +1,6 @@
 package com.bloomscafe.order.client;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -10,9 +11,10 @@ public class InventoryClient {
 
     private final RestClient restClient;
 
-    public InventoryClient() {
+    public InventoryClient(
+            @Value("${inventory.service.url:http://localhost:8085}") String baseUrl) {
         this.restClient = RestClient.builder()
-                .baseUrl("http://localhost:8085")
+                .baseUrl(baseUrl)
                 .build();
     }
 
