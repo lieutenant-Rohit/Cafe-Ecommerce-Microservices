@@ -4,6 +4,49 @@ A full-stack cafe ordering platform built with a **microservices backend** (Java
 
 ---
 
+## Quick Start (Docker)
+
+The only thing your friend needs: **Docker Desktop** installed.
+
+```bash
+git clone https://github.com/lieutenant-Rohit/BloomCafeV2.git
+cd BloomCafeV2
+docker-compose up --build
+```
+
+Wait for all services to start (first build takes a few minutes). Then open:
+
+- **Frontend:** http://localhost:3000
+- **API Gateway:** http://localhost:8080
+
+To stop everything:
+```bash
+docker-compose down
+```
+
+To stop and wipe the database:
+```bash
+docker-compose down -v
+```
+
+### What's running
+
+| Service | Port | Description |
+|---------|------|-------------|
+| Frontend | 3000 | React SPA served by Nginx |
+| Nginx Gateway | 8080 | Reverse proxy, routes `/api/*` to backend |
+| User Service | 8081 | Auth, JWT, user management |
+| Catalog Service | 8082 | Products, categories, Redis cache |
+| Cart Service | 8083 | Shopping cart, Kafka consumer |
+| Order Service | 8084 | Order orchestration, Kafka producer |
+| Inventory Service | 8085 | Stock management |
+| Notification Service | 8086 | Kafka consumer, WebSocket push |
+| PostgreSQL | 5432 | 5 databases (one per service) |
+| Redis | 6379 | Catalog caching |
+| Kafka | 9092 | Async inter-service messaging |
+
+---
+
 ## Tech Stack
 
 ### Frontend
@@ -49,18 +92,18 @@ A full-stack cafe ordering platform built with a **microservices backend** (Java
 
 ```
                          ┌─────────────────────────────────┐
-                         │         Frontend (React)        │
-                         │    Vite Dev Server (:5173)      │
+                         │      Frontend (React + Nginx)   │
+                         │          http://:3000            │
                          └──────────────┬──────────────────┘
-                                        │
+                                        │ /api/*
                                         ▼
                          ┌─────────────────────────────────┐
-                         │     Nginx Reverse Proxy (:8080) │
-                         │   CORS  ·  Load Balancing  · JWT│
-                         └──┬───┬───┬───┬───┬───┬──────────┘
-                            │   │   │   │   │   │
-                ┌───────────┘   │   │   │   │   └──────────┐
-                ▼               ▼   │   ▼   ▼              ▼
+                         │     Nginx API Gateway (:8080)   │
+                         │   CORS  ·  Routing  ·  JWT      │
+                         └──┬───┬───┬───┬───┬──────────────┘
+                            │   │   │   │   │
+                ┌───────────┘   │   │   │   └──────────┐
+                ▼               ▼   │   ▼              ▼
           ┌──────────┐  ┌──────────┐│┌──────────┐  ┌────────────┐
           │  User    │  │ Catalog  │││  Order   │  │ Inventory  │
           │ (:8081)  │  │ (:8082)  │││ (:8084)  │  │  (:8085)   │
@@ -128,142 +171,21 @@ A full-stack cafe ordering platform built with a **microservices backend** (Java
 
 ---
 
-## Prerequisites
+## Creating an Account
 
-- **Java 21** or later (for local development)
-- **Node.js 18+** and npm (for local development)
-- **PostgreSQL 16+** running on `localhost:5432` (for local development)
-- **Docker & Docker Compose** (for containerized setup)
-
----
-
-## Quick Start (Docker)
-
-The fastest way to run the entire project — one command:
-
-```bash
-docker-compose up --build
-```
-
-This builds and starts **all** services:
-
-| Service | URL |
-|---------|-----|
-| **Frontend** | http://localhost:3000 |
-| **API Gateway** | http://localhost:8080 |
-| **User Service** | http://localhost:8081 |
-| **Catalog Service** | http://localhost:8082 |
-| **Cart Service** | http://localhost:8083 |
-| **Order Service** | http://localhost:8084 |
-| **Inventory Service** | http://localhost:8085 |
-| **Notification Service** | http://localhost:8086 |
-| **PostgreSQL** | localhost:5432 |
-| **Redis** | localhost:6379 |
-| **Kafka** | localhost:9092 |
-
-To stop everything:
-
-```bash
-docker-compose down
-```
-
-To stop and remove databases:
-
-```bash
-docker-compose down -v
-```
-
----
-
-## Getting Started (Local Development)
-
-### 1. Clone the repository
-
-```bash
-git clone https://github.com/your-username/BloomCafeV2.git
-cd BloomCafeV2
-```
-
-### 2. Start infrastructure services
-
-```bash
-docker-compose up -d
-```
-
-This starts:
-- **Kafka** (KRaft mode, no Zookeeper) on port `9092`
-- **Redis** on port `6379`
-
-### 3. Create PostgreSQL databases
+The app doesn't seed any users. To get started, register at http://localhost:3000/register, then promote yourself to admin:
 
 ```sql
-CREATE DATABASE blooms_user;
-CREATE DATABASE blooms_catalog;
-CREATE DATABASE blooms_cart;
-CREATE DATABASE blooms_order;
-CREATE DATABASE blooms_inventory;
+-- Connect to the database
+psql -U root1 -d blooms_user
+
+-- Update your role (replace the email with yours)
+UPDATE users SET role='ADMIN' WHERE email='your@email.com';
 ```
 
-### 4. Set environment variables
-
-Create a `.env` file in the project root:
-
-```env
-JWT_SECRET=your-secret-key-here
-```
-
-Each backend service reads `JWT_SECRET` from the environment for JWT signing.
-
-### 5. Start backend services
-
-Open separate terminals for each service:
-
+Or via Docker:
 ```bash
-# Terminal 1 - User Service
-cd backend/user-service
-./mvnw spring-boot:run
-
-# Terminal 2 - Catalog Service
-cd backend/catalog-service
-./mvnw spring-boot:run
-
-# Terminal 3 - Cart Service
-cd backend/cart-service
-./mvnw spring-boot:run
-
-# Terminal 4 - Order Service
-cd backend/order-service
-./mvnw spring-boot:run
-
-# Terminal 5 - Inventory Service
-cd backend/inventory-service
-./mvnw spring-boot:run
-
-# Terminal 6 - Notification Service
-cd backend/notification-service
-./mvnw spring-boot:run
-```
-
-### 6. Start the frontend
-
-```bash
-cd frontend
-npm install
-npm run dev
-```
-
-The frontend runs on `http://localhost:5173` and proxies API requests to Nginx on port `8080`.
-
-### 7. Start Nginx (optional, for production-like routing)
-
-```bash
-nginx -c /path/to/nginx.conf
-```
-
-Or run with Docker:
-
-```bash
-docker run -d --name nginx -p 8080:8080 -v $(pwd)/nginx.conf:/etc/nginx/nginx.conf:ro nginx:alpine
+docker exec -it blooms-postgres psql -U root1 -d blooms_user -c "UPDATE users SET role='ADMIN' WHERE email='your@email.com';"
 ```
 
 ---
@@ -272,29 +194,30 @@ docker run -d --name nginx -p 8080:8080 -v $(pwd)/nginx.conf:/etc/nginx/nginx.co
 
 ```
 BloomCafeV2/
-├── docker-compose.yml          # Kafka (KRaft mode), Redis
-├── nginx.conf                  # Reverse proxy & API gateway
+├── docker-compose.yml          # Full stack orchestration
+├── init.sql                    # Auto-creates PostgreSQL databases
+├── nginx.conf                  # API gateway routing
 ├── cors-headers.conf           # Shared CORS headers for Nginx
-├── .env                        # JWT_SECRET (not committed)
+├── .env                        # JWT_SECRET
 │
 ├── frontend/
-│   ├── index.html
+│   ├── Dockerfile              # Multi-stage: Node build + Nginx serve
+│   ├── nginx.conf              # SPA routing + API proxy
 │   ├── package.json
-│   ├── vite.config.ts          # Dev proxy → :8080
-│   ├── tailwind.config.js      # Custom cafe color palette
-│   ├── src/
-│   │   ├── main.tsx            # React entry point
-│   │   ├── App.tsx             # Auth init + cart hydration
-│   │   ├── router/index.tsx    # All routes with Framer Motion
-│   │   ├── store/              # Zustand stores (auth, cart)
-│   │   ├── api/                # Axios API clients (6 modules)
-│   │   ├── types/index.ts      # TypeScript interfaces
-│   │   ├── pages/              # Public pages (Home, Menu, Cart...)
-│   │   ├── pages/admin/        # Admin panel (Dashboard, CRUD...)
-│   │   ├── components/         # UI components, layout, animations
-│   │   ├── hooks/              # Custom hooks (useCafeStatus)
-│   │   └── utils/              # JWT helpers
-│   └── public/                 # Static assets
+│   ├── vite.config.ts
+│   ├── tailwind.config.js
+│   └── src/
+│       ├── main.tsx            # React entry point
+│       ├── App.tsx             # Auth init + cart hydration
+│       ├── router/index.tsx    # All routes with Framer Motion
+│       ├── store/              # Zustand stores (auth, cart)
+│       ├── api/                # Axios API clients (6 modules)
+│       ├── types/index.ts      # TypeScript interfaces
+│       ├── pages/              # Public pages (Home, Menu, Cart...)
+│       ├── pages/admin/        # Admin panel (Dashboard, CRUD...)
+│       ├── components/         # UI components, layout, animations
+│       ├── hooks/              # Custom hooks (useCafeStatus)
+│       └── utils/              # JWT helpers
 │
 ├── backend/
 │   ├── user-service/           # :8081 — Auth, JWT, User CRUD
@@ -302,10 +225,56 @@ BloomCafeV2/
 │   ├── cart-service/           # :8083 — Shopping cart, Kafka consumer
 │   ├── order-service/          # :8084 — Order orchestration, Kafka producer
 │   ├── inventory-service/      # :8085 — Stock management
-│   ├── notification-service/   # :8086 — Kafka consumer, WebSocket push
-│   ├── gateway-service/        # (placeholder)
-│   └── payment-service/        # (placeholder)
+│   └── notification-service/   # :8086 — Kafka consumer, WebSocket push
 ```
+
+---
+
+## Local Development (without Docker)
+
+If you prefer running services locally:
+
+### Prerequisites
+- Java 21+
+- Node.js 18+
+- PostgreSQL 16+ on `localhost:5432`
+- Docker (only for Kafka + Redis)
+
+### 1. Start infrastructure
+```bash
+docker-compose up -d redis kafka
+```
+
+### 2. Create databases
+```sql
+CREATE DATABASE blooms_user;
+CREATE DATABASE blooms_catalog;
+CREATE DATABASE blooms_cart;
+CREATE DATABASE blooms_order;
+CREATE DATABASE blooms_inventory;
+```
+
+### 3. Set environment variable
+```bash
+export JWT_SECRET=your-secret-key-here
+```
+
+### 4. Start backend services (6 terminals)
+```bash
+cd backend/user-service && ./mvnw spring-boot:run
+cd backend/catalog-service && ./mvnw spring-boot:run
+cd backend/cart-service && ./mvnw spring-boot:run
+cd backend/order-service && ./mvnw spring-boot:run
+cd backend/inventory-service && ./mvnw spring-boot:run
+cd backend/notification-service && ./mvnw spring-boot:run
+```
+
+### 5. Start frontend
+```bash
+cd frontend && npm install && npm run dev
+```
+
+Frontend runs on http://localhost:5173 and proxies API requests to the backend services.
 
 ---
 
@@ -406,30 +375,7 @@ No REST endpoints. Listens to Kafka `order-created` topic and pushes WebSocket/S
 
 ---
 
-## Available Scripts
-
-### Frontend
-
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Start Vite dev server on port 5173 |
-| `npm run build` | Type-check and build for production |
-| `npm run preview` | Preview production build locally |
-| `npm run lint` | Run ESLint |
-
-### Backend (per service)
-
-| Command | Description |
-|---------|-------------|
-| `./mvnw spring-boot:run` | Start the service |
-| `./mvnw package` | Build the JAR |
-| `./mvnw test` | Run tests |
-
----
-
 ## Contributing
-
-Contributions are welcome! Whether it's a bug report, a feature request, or a pull request — every bit helps.
 
 1. **Fork** the repository
 2. **Create** a feature branch (`git checkout -b feature/your-feature`)
@@ -441,23 +387,8 @@ Contributions are welcome! Whether it's a bug report, a feature request, or a pu
 
 - Implement the **payment service** (Stripe, Razorpay, etc.)
 - Add **unit and integration tests** for backend services
-- Set up a proper **API gateway** (Spring Cloud Gateway / Kong)
-- Add **CI/CD** with GitHub Actions
-- Improve **error handling** and add React error boundaries
-- Add **Docker Compose** definitions for all backend services
+- Set up **CI/CD** with GitHub Actions
 - Write **API documentation** with Swagger/OpenAPI
-
-Feel free to open an issue to discuss ideas before diving into code.
-
----
-
-## Support
-
-If you found this project helpful:
-
-- Give it a star on GitHub
-- Share it with others who might benefit
-- Open an issue if you run into problems
 
 ---
 
@@ -471,5 +402,3 @@ If you found this project helpful:
 - [Apache Kafka](https://kafka.apache.org/) — Event-driven messaging
 - [Redis](https://redis.io/) — Caching
 - [Docker](https://www.docker.com/) — Containerization
-
-
