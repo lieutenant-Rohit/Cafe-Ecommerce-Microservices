@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback } from 'react'
+import { useEffect, useRef } from 'react'
 import Lenis from 'lenis'
 
 export default function SmoothScroll({ children }: { children: React.ReactNode }) {
@@ -14,14 +14,15 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
 
     lenisRef.current = lenis
 
+    let animId: number
     function raf(time: number) {
       lenis.raf(time)
-      requestAnimationFrame(raf)
+      animId = requestAnimationFrame(raf)
     }
-
-    requestAnimationFrame(raf)
+    animId = requestAnimationFrame(raf)
 
     return () => {
+      cancelAnimationFrame(animId)
       lenis.destroy()
     }
   }, [])

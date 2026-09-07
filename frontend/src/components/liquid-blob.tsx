@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from 'react'
-import { motion, AnimatePresence } from 'motion/react'
+import { useEffect, useState } from 'react'
+import { motion } from 'motion/react'
 
 const BLOB_PATHS = [
   'M44.5,-60.1C56.2,-51.3,62.3,-35.1,65.8,-18.3C69.3,-1.5,70.2,15.9,63.1,29.1C56.1,42.3,41.1,51.3,25.8,57.1C10.5,62.9,-5.1,65.5,-20.3,62.1C-35.5,58.7,-50.3,49.3,-58.6,36C-66.9,22.7,-68.7,5.5,-64.7,-9.6C-60.7,-24.7,-50.9,-37.7,-39.1,-46.5C-27.3,-55.3,-13.7,-59.9,1.7,-62C17.1,-64.1,32.8,-68.9,44.5,-60.1Z',
@@ -27,27 +27,24 @@ export default function LiquidBlob({
     return () => clearInterval(interval)
   }, [])
 
+  const filterId = `liquid-blur-${Math.random().toString(36).slice(2, 8)}`
+
   return (
     <div className={`pointer-events-none ${className}`} style={{ width: size, height: size }}>
       <svg viewBox="-100 -100 200 200" className="w-full h-full">
         <defs>
-          <filter id="liquid-blur">
+          <filter id={filterId}>
             <feGaussianBlur in="SourceGraphic" stdDeviation="3" />
           </filter>
         </defs>
-        <AnimatePresence mode="wait">
-          <motion.path
-            key={pathIndex}
-            d={BLOB_PATHS[pathIndex]}
-            fill={color}
-            filter="url(#liquid-blur)"
-            opacity={0.15}
-            initial={{ d: BLOB_PATHS[(pathIndex - 1 + BLOB_PATHS.length) % BLOB_PATHS.length] }}
-            animate={{ d: BLOB_PATHS[pathIndex] }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 3, ease: 'easeInOut' }}
-          />
-        </AnimatePresence>
+        <motion.path
+          d={BLOB_PATHS[pathIndex]}
+          fill={color}
+          filter={`url(#${filterId})`}
+          opacity={0.15}
+          animate={{ d: BLOB_PATHS[pathIndex] }}
+          transition={{ duration: 3, ease: 'easeInOut' }}
+        />
       </svg>
     </div>
   )

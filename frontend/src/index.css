@@ -179,6 +179,20 @@ canvas {
   image-rendering: -webkit-optimize-contrast;
 }
 
+/* Hide scrollbar for category pills */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Custom cursor hide on interactive elements when custom cursor is active */
+[data-cursor] * {
+  cursor: none !important;
+}
+
 @layer utilities {
   .animate-marquee {
     animation-name: marquee-x;

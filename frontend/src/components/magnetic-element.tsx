@@ -14,7 +14,7 @@ export default function MagneticElement({
   className = '',
   as: Tag = 'div',
 }: MagneticElementProps) {
-  const ref = useRef<HTMLDivElement>(null)
+  const ref = useRef<HTMLElement>(null)
   const [hovered, setHovered] = useState(false)
 
   const x = useMotionValue(0)
@@ -41,9 +41,11 @@ export default function MagneticElement({
     setHovered(false)
   }
 
+  const MotionTag = motion[Tag as keyof typeof motion] as typeof motion.div
+
   return (
-    <motion.div
-      ref={ref}
+    <MotionTag
+      ref={ref as React.Ref<HTMLDivElement>}
       className={`inline-block ${className}`}
       style={{ x: springX, y: springY, rotateX, rotateY, perspective: 800 }}
       onMouseMove={handleMouse}
@@ -52,6 +54,6 @@ export default function MagneticElement({
       whileTap={{ scale: 0.97 }}
     >
       {children}
-    </motion.div>
+    </MotionTag>
   )
 }

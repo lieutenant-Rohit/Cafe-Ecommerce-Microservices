@@ -77,7 +77,7 @@ export default function ParticleField({ className = '' }: { className?: string }
       const my = mouseRef.current.y
 
       // Spawn particles near mouse occasionally
-      if (mx > 0 && Math.random() < 0.15) {
+      if (mx > 0 && Math.random() < 0.15 && particlesRef.current.length < 200) {
         particlesRef.current.push(createParticle(mx + (Math.random() - 0.5) * 40, my + (Math.random() - 0.5) * 40, true))
       }
 

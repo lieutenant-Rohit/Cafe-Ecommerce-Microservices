@@ -88,9 +88,21 @@ export default {
           '0%': { transform: 'translateX(-100%)' },
           '100%': { transform: 'translateX(100%)' },
         },
+        float: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-12px)' },
+        },
+        steamDrift: {
+          '0%': { opacity: '0', transform: 'translateY(0) scaleX(1)' },
+          '15%': { opacity: '0.7' },
+          '50%': { opacity: '0.4', transform: 'translateY(-30px) scaleX(1.4)' },
+          '100%': { opacity: '0', transform: 'translateY(-60px) scaleX(0.6)' },
+        },
       },
       animation: {
         shimmer: 'shimmer 3s infinite',
+        float: 'float 6s ease-in-out infinite',
+        steamDrift: 'steamDrift 4s ease-in-out infinite',
       },
     },
   },

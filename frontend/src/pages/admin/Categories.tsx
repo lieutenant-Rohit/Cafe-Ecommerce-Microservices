@@ -29,19 +29,27 @@ export default function AdminCategories() {
   }
 
   async function handleSave() {
-    if (editing) {
-      await updateCategory(editing.id, name)
-    } else {
-      await createCategory(name)
+    try {
+      if (editing) {
+        await updateCategory(editing.id, name)
+      } else {
+        await createCategory(name)
+      }
+      setShowForm(false)
+      load()
+    } catch {
+      // error handled by axios interceptor
     }
-    setShowForm(false)
-    load()
   }
 
   async function handleDelete(id: number) {
     if (!window.confirm('Delete this category?')) return
-    await deleteCategory(id)
-    load()
+    try {
+      await deleteCategory(id)
+      load()
+    } catch {
+      // error handled by axios interceptor
+    }
   }
 
   return (

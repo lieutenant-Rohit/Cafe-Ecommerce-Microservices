@@ -16,6 +16,33 @@ import BlobMesh from "@/components/ui/blob-mesh";
 import Grain from "@/components/ui/grain";
 import { useCafeStatus } from "@/hooks/useCafeStatus";
 
+function GradientTextEffect({
+    children,
+    delay = 0,
+    className,
+}: {
+    children: string;
+    delay?: number;
+    className?: string;
+}) {
+    const words = children.split(/(\s+)/);
+    return (
+        <span className="block">
+            {words.map((word, i) => (
+                <motion.span
+                    key={i}
+                    initial={{ opacity: 0, y: 20, filter: "blur(12px)" }}
+                    animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                    transition={{ delay: delay + i * 0.12, duration: 0.5, ease: "easeOut" }}
+                    className={cn("inline-block whitespace-pre", className)}
+                >
+                    {word}
+                </motion.span>
+            ))}
+        </span>
+    );
+}
+
 export interface NavLink {
     label: string;
     to: string;
@@ -244,19 +271,9 @@ export function Hero2({
                                     Where every sip
                                 </TextEffect>
                             </span>
-                            <span className="block italic font-light">
-                                {headlineAccent.split(' ').map((word, i) => (
-                                    <motion.span
-                                        key={i}
-                                        initial={{ opacity: 0, y: 20, filter: 'blur(12px)' }}
-                                        animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-                                        transition={{ delay: 0.4 + i * 0.12, duration: 0.5, ease: 'easeOut' }}
-                                        className="inline-block whitespace-pre bg-gradient-to-r from-[#A94E2C] via-[#C2643A] to-[#D37E58] bg-clip-text text-transparent"
-                                    >
-                                        {word}
-                                    </motion.span>
-                                ))}
-                            </span>
+                            <GradientTextEffect delay={0.5} className="italic font-light bg-gradient-to-r from-[#A94E2C] via-[#C2643A] to-[#D37E58] bg-clip-text text-transparent">
+                                {headlineAccent}
+                            </GradientTextEffect>
                         </h1>
 
                         <motion.p

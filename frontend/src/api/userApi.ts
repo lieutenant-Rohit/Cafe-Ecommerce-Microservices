@@ -11,11 +11,6 @@ export async function register(payload: RegisterPayload): Promise<RegisterRespon
   return data
 }
 
-export async function fetchCurrentUser(): Promise<User> {
-  const { data } = await axiosClient.get<User>('/api/users/me')
-  return data
-}
-
 export async function fetchUsers(): Promise<User[]> {
   const { data } = await axiosClient.get<User[]>('/api/users')
   return data

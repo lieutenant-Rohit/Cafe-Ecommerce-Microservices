@@ -16,11 +16,6 @@ export async function fetchMyOrders(): Promise<Order[]> {
   return data
 }
 
-export async function fetchOrderById(orderId: number): Promise<Order> {
-  const { data } = await axiosClient.get(`/api/orders/${orderId}`)
-  return data
-}
-
 export async function updateOrderStatus(orderId: number, status: OrderStatus): Promise<Order> {
   const { data } = await axiosClient.patch(`/api/orders/${orderId}/status?status=${status}`)
   return data

@@ -1,4 +1,4 @@
-import { useState, FormEvent } from 'react'
+import { useState, useEffect, FormEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import useAuthStore from '../store/authStore'
 import AuthSplit from '../components/layout/AuthSplit'
@@ -17,13 +17,20 @@ export default function Register() {
   const [address, setAddress] = useState('')
   const [success, setSuccess] = useState(false)
 
+  useEffect(() => {
+    let timeout: ReturnType<typeof setTimeout>
+    if (success) {
+      timeout = setTimeout(() => navigate('/login'), 2000)
+    }
+    return () => clearTimeout(timeout)
+  }, [success, navigate])
+
   async function handleSubmit(e: FormEvent) {
     e.preventDefault()
     clearError()
     try {
       await register({ name, email, password, address })
       setSuccess(true)
-      setTimeout(() => navigate('/login'), 2000)
     } catch {
       // error is set in store
     }

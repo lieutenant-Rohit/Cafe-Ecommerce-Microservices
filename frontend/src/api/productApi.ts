@@ -22,11 +22,6 @@ export async function fetchProductsByCategory(
   return data
 }
 
-export async function fetchProductById(id: number): Promise<Product> {
-  const { data } = await axiosClient.get(`/api/products/${id}`)
-  return data
-}
-
 export async function createProduct(product: { name: string; price: number; stockQuantity: number; imageUrl?: string; category: { id: number } }): Promise<Product> {
   const { data } = await axiosClient.post('/api/products', product)
   return data

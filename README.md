@@ -130,14 +130,52 @@ A full-stack cafe ordering platform built with a **microservices backend** (Java
 
 ## Prerequisites
 
-- **Java 21** or later
-- **Node.js 18+** and npm
-- **PostgreSQL 16+** running on `localhost:5432`
-- **Docker & Docker Compose** (for Kafka, Redis)
+- **Java 21** or later (for local development)
+- **Node.js 18+** and npm (for local development)
+- **PostgreSQL 16+** running on `localhost:5432` (for local development)
+- **Docker & Docker Compose** (for containerized setup)
 
 ---
 
-## Getting Started
+## Quick Start (Docker)
+
+The fastest way to run the entire project — one command:
+
+```bash
+docker-compose up --build
+```
+
+This builds and starts **all** services:
+
+| Service | URL |
+|---------|-----|
+| **Frontend** | http://localhost:3000 |
+| **API Gateway** | http://localhost:8080 |
+| **User Service** | http://localhost:8081 |
+| **Catalog Service** | http://localhost:8082 |
+| **Cart Service** | http://localhost:8083 |
+| **Order Service** | http://localhost:8084 |
+| **Inventory Service** | http://localhost:8085 |
+| **Notification Service** | http://localhost:8086 |
+| **PostgreSQL** | localhost:5432 |
+| **Redis** | localhost:6379 |
+| **Kafka** | localhost:9092 |
+
+To stop everything:
+
+```bash
+docker-compose down
+```
+
+To stop and remove databases:
+
+```bash
+docker-compose down -v
+```
+
+---
+
+## Getting Started (Local Development)
 
 ### 1. Clone the repository
 

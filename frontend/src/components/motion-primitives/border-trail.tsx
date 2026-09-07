@@ -34,8 +34,8 @@ export function BorderTrail({
       <motion.rect
         x="0.5"
         y="0.5"
-        width="calc(100% - 1px)"
-        height="calc(100% - 1px)"
+        width="99%"
+        height="99%"
         rx={radius}
         fill="none"
         stroke={`url(#${id})`}

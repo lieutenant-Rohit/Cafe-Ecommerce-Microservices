@@ -1,4 +1,4 @@
-import { InView } from './in-view'
+import { InView } from '../motion-primitives/in-view'
 import { cn } from '@/lib/utils'
 
 interface RevealProps {
@@ -10,6 +10,7 @@ interface RevealProps {
 export default function Reveal({ children, className, delay = 0 }: RevealProps) {
   return (
     <InView
+      once
       variants={{
         hidden: { opacity: 0, y: 24 },
         visible: { opacity: 1, y: 0 },

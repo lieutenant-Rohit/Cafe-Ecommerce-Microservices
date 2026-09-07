@@ -21,8 +21,12 @@ export default function AdminUsers() {
 
   async function handleDelete(id: number) {
     if (!window.confirm('Delete this user?')) return
-    await deleteUser(id)
-    load()
+    try {
+      await deleteUser(id)
+      load()
+    } catch {
+      // error handled by axios interceptor
+    }
   }
 
   if (loading) {

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import type { Order, OrderStatus } from '../../types'
 import { fetchAllOrders, updateOrderStatus, deleteOrder } from '../../api/orderApi'
 
-const statusFlow: OrderStatus[] = ['CREATED', 'PAYMENT_COMPLETED', 'CONFIRMED']
+const statusFlow: OrderStatus[] = ['CREATED', 'PAYMENT_PENDING', 'PAYMENT_COMPLETED', 'CONFIRMED']
 const statusColors: Record<OrderStatus, string> = {
   CREATED: 'bg-blue-100 text-blue-700',
   PAYMENT_PENDING: 'bg-yellow-100 text-yellow-700',
@@ -35,25 +35,38 @@ export default function AdminOrders() {
     const currentIdx = statusFlow.indexOf(order.status)
     if (currentIdx < 0 || currentIdx >= statusFlow.length - 1) return
     const nextStatus = statusFlow[currentIdx + 1]
-    await updateOrderStatus(order.id, nextStatus)
-    load()
+    try {
+      await updateOrderStatus(order.id, nextStatus)
+      load()
+    } catch {
+      // error handled by axios interceptor
+    }
   }
 
   async function handleCancel(order: Order) {
     if (!window.confirm(`Cancel order #${order.id}?`)) return
-    await updateOrderStatus(order.id, 'CANCELLED')
-    load()
+    try {
+      await updateOrderStatus(order.id, 'CANCELLED')
+      load()
+    } catch {
+      // error handled by axios interceptor
+    }
   }
 
   async function handleDelete(order: Order) {
     if (!window.confirm(`Permanently delete order #${order.id}?`)) return
-    await deleteOrder(order.id)
-    load()
+    try {
+      await deleteOrder(order.id)
+      load()
+    } catch {
+      // error handled by axios interceptor
+    }
   }
 
   function getActionLabel(status: OrderStatus): string | null {
     switch (status) {
       case 'CREATED': return 'Confirm Payment'
+      case 'PAYMENT_PENDING': return 'Confirm Payment'
       case 'PAYMENT_COMPLETED': return 'Confirm Order'
       default: return null
     }

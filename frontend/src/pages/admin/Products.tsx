@@ -58,26 +58,34 @@ export default function AdminProducts() {
   }
 
   async function handleSave() {
-    const payload = {
-      name: form.name,
-      price: parseFloat(form.price),
-      stockQuantity: parseInt(form.stockQuantity),
-      imageUrl: form.imageUrl || undefined,
-      category: { id: parseInt(form.categoryId) },
+    try {
+      const payload = {
+        name: form.name,
+        price: parseFloat(form.price),
+        stockQuantity: parseInt(form.stockQuantity),
+        imageUrl: form.imageUrl || undefined,
+        category: { id: parseInt(form.categoryId) },
+      }
+      if (editing) {
+        await updateProduct(editing.id, payload)
+      } else {
+        await createProduct(payload)
+      }
+      setShowForm(false)
+      load()
+    } catch {
+      // error handled by axios interceptor
     }
-    if (editing) {
-      await updateProduct(editing.id, payload)
-    } else {
-      await createProduct(payload)
-    }
-    setShowForm(false)
-    load()
   }
 
   async function handleDelete(id: number) {
     if (!window.confirm('Delete this product?')) return
-    await deleteProduct(id)
-    load()
+    try {
+      await deleteProduct(id)
+      load()
+    } catch {
+      // error handled by axios interceptor
+    }
   }
 
   return (

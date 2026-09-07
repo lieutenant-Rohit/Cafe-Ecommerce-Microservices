@@ -121,7 +121,7 @@ export default function Home() {
       <CoffeeMeter />
 
       {/* Masthead strip */}
-      <section aria-hidden="true" className="relative z-10 bg-cream-50 text-coffee-900 border-y border-coffee-900/15 py-3.5 overflow-hidden">
+      <section aria-hidden="true" className="relative z-10 bg-cream-50 text-coffee-900 py-3.5 overflow-hidden">
         <div className="flex items-center">
           <span className="shrink-0 pl-5 pr-4 text-[10px] font-semibold uppercase tracking-[0.3em] text-primary-600">
             Morning edition
@@ -132,7 +132,7 @@ export default function Home() {
               duration={30}
               pauseOnHover
               className="text-[11px] font-semibold uppercase tracking-[0.22em] text-coffee-700/80"
-              separatorClassName="bg-primary-500/70"
+              separatorClassName="bg-coffee-300/50"
             />
           </div>
           <span className="hidden md:block shrink-0 pl-4 pr-5 text-[10px] font-semibold uppercase tracking-[0.3em] text-coffee-400">
@@ -231,7 +231,7 @@ export default function Home() {
       </section>
 
       {/* 03 — Fact box with orbiting elements */}
-      <section className="relative overflow-hidden bg-primary-600 text-cream-50 py-20 md:py-24 border-y border-coffee-900/10">
+      <section className="relative overflow-hidden bg-primary-600 text-cream-50 py-20 md:py-24">
         <BlobMesh variant="cool" className="opacity-50" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-[1fr_1.3fr] gap-12 md:gap-16 items-center">
@@ -388,10 +388,10 @@ export default function Home() {
               </p>
             </div>
           </Reveal>
-          <div className="mt-12 border-b border-coffee-900/10">
+          <div className="mt-12">
             {processSteps.map((step, i) => (
               <Reveal key={step.n} delay={i * 0.08}>
-                <div className="group md:grid md:grid-cols-[6rem_1fr_auto] gap-x-8 gap-y-3 items-start py-8 border-t border-coffee-900/10 transition-all duration-300 md:hover:pl-4">
+                <div className="group md:grid md:grid-cols-[6rem_1fr_auto] gap-x-8 gap-y-3 items-start py-8 border-t border-cream-200 transition-all duration-300 md:hover:pl-4">
                   <span className="font-display text-4xl md:text-5xl font-semibold text-coffee-900/15 leading-none">
                     {step.n}
                   </span>

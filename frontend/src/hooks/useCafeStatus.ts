@@ -33,11 +33,15 @@ export function useCafeStatus(): CafeStatus {
 
   const greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening'
 
+  const nextDay = (day + 1) % 7
+  const nextWeekend = nextDay === 0 || nextDay === 6
+  const nextOpenAt = nextWeekend ? WEEKENDS.open : WEEKDAYS.open
+
   const statusText = isOpen
     ? `Open now — closes ${fmtHour(closeAt)}`
     : hour < openAt
       ? `Closed — opens today ${fmtHour(openAt)}`
-      : `Closed — opens tomorrow ${fmtHour(openAt)}`
+      : `Closed — opens tomorrow ${fmtHour(nextOpenAt)}`
 
   const hoursToday = weekend
     ? `Open ${fmtHour(openAt)} – ${fmtHour(closeAt)} (weekend)`

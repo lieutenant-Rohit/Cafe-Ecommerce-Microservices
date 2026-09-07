@@ -16,13 +16,3 @@ export function isTokenExpired(token: string): boolean {
   return decoded.exp < now
 }
 
-export function getTokenRole(token: string): string | null {
-  const decoded = decodeToken(token)
-  return decoded?.role ?? null
-}
-
-export function getTokenUserId(token: string): number | null {
-  const decoded = decodeToken(token)
-  return decoded?.userId ?? null
-}
-

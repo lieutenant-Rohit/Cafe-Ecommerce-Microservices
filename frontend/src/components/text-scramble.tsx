@@ -30,7 +30,6 @@ export default function TextScramble({
     const chars = text.split('')
     const resolved: string[] = new Array(chars.length).fill('')
     let frame = 0
-    const totalFrames = Math.ceil(chars.length / 1) // chars per frame
 
     const interval = setInterval(() => {
       const currentFrame = frame
