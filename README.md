@@ -6,8 +6,6 @@ A full-stack cafe ordering platform built with a **microservices backend** (Java
 
 ## Quick Start (Docker)
 
-The only thing your friend needs: **Docker Desktop** installed.
-
 ```bash
 git clone https://github.com/lieutenant-Rohit/BloomCafeV2.git
 cd BloomCafeV2
