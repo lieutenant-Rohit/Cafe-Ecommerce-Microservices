@@ -6,3 +6,4 @@ public record RegisterResponse(
         String email,
         String role) {
 }
+

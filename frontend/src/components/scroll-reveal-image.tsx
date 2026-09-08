@@ -48,3 +48,4 @@ export default function ScrollRevealImage({
     </div>
   )
 }
+

@@ -47,3 +47,4 @@ public class CatalogClient {
                 .body(new ParameterizedTypeReference<>(){});
     }
 }
+

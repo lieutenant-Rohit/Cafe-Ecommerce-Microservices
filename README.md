@@ -400,3 +400,4 @@ No REST endpoints. Listens to Kafka `order-created` topic and pushes WebSocket/S
 - [Apache Kafka](https://kafka.apache.org/) — Event-driven messaging
 - [Redis](https://redis.io/) — Caching
 - [Docker](https://www.docker.com/) — Containerization
+

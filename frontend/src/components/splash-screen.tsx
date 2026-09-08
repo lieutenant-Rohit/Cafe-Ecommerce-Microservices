@@ -131,3 +131,4 @@ export default function SplashScreen({ onComplete }: { onComplete: () => void })
     </AnimatePresence>
   )
 }
+

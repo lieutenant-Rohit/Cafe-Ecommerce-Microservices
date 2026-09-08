@@ -12,3 +12,4 @@ public record ProductResponse(
 ) {
     public record CategoryResponse(Long id, String name) {}
 }
+

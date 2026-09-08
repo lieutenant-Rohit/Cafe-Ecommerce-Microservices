@@ -26,3 +26,4 @@ public class GlobalExceptionHandler {
                 .body(body);
     }
 }
+

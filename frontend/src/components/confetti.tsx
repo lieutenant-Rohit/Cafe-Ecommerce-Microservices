@@ -131,3 +131,4 @@ export function ConfettiCanvas({ canvasRef }: { canvasRef: React.RefObject<HTMLC
     />
   )
 }
+

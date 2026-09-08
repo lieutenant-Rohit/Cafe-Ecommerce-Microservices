@@ -34,3 +34,4 @@ public class GlobalExceptionHandler {
                 .body(Map.of("error", "Something went wrong"));
     }
 }
+
