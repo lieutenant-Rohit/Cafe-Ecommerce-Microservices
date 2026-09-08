@@ -46,8 +46,8 @@ const pillars = [
     color: 'from-amber-100 to-orange-50',
   },
   {
-    title: 'The Sandwich Counter',
-    desc: 'Grilled cheese on thick sourdough, turkey clubs pressed and cut on the diagonal. Between 11:30 and close, it\u2019s the busiest seat in the house.',
+    title: 'The Chaat Corner',
+    desc: 'Masala grilled sandwiches, paneer wraps pressed and cut on the diagonal. Between 11:30 and close, it\u2019s the busiest seat in the house.',
     icon: Flame,
     color: 'from-rose-100 to-red-50',
   },
@@ -162,7 +162,7 @@ export default function Home() {
                   Every bean, batch, and bite happens in this building — today.
                 </p>
                 <p className="mt-3 text-[11px] font-semibold uppercase tracking-[0.25em] text-coffee-400">
-                  Issue no. 041 · first bake 5:00 a.m.
+                  Since 2021 · first bake 5:00 a.m.
                 </p>
               </div>
             </div>
@@ -327,7 +327,7 @@ export default function Home() {
                       />
                     </Parallax>
                     <span className="absolute top-3 right-3 bg-primary-600 text-cream-50 text-sm font-bold px-3 py-1.5 rounded-full shadow-md">
-                      ${item.price.toFixed(2)}
+                      ₹{item.price.toFixed(0)}
                     </span>
                   </div>
                   <div className="p-5">
