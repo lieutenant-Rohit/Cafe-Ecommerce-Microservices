@@ -183,15 +183,15 @@ export default function Footer() {
               <ul className="space-y-4">
                 <li className="flex items-start gap-3">
                   <MapPin className="w-4 h-4 text-primary-500 mt-0.5 shrink-0" />
-                  <span className="text-sm">17 Meadow Street<br />Brooklyn, NY 11201</span>
+                  <span className="text-sm">42, Rajpur Road<br />Dehradun, Uttarakhand 248001</span>
                 </li>
                 <li className="flex items-center gap-3">
                   <Phone className="w-4 h-4 text-primary-500 shrink-0" />
-                  <span className="text-sm">(718) 555-0127</span>
+                  <span className="text-sm">+91 135 265 0127</span>
                 </li>
                 <li className="flex items-center gap-3">
                   <Mail className="w-4 h-4 text-primary-500 shrink-0" />
-                  <span className="text-sm">hello@bloomscafe.com</span>
+                  <span className="text-sm">hello@bloomscafe.in</span>
                 </li>
               </ul>
 

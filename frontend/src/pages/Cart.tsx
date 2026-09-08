@@ -239,7 +239,7 @@ export default function Cart() {
                         {item.product.name}
                       </h3>
                       <p className="text-lg sm:text-xl font-bold text-coffee-900 mt-1">
-                        ${(item.product.price * item.quantity).toFixed(2)}
+                        ₹{(item.product.price * item.quantity).toFixed(0)}
                       </p>
                     </div>
 
@@ -298,7 +298,7 @@ export default function Cart() {
                     exit={{ y: 10, opacity: 0 }}
                     transition={{ type: 'spring', stiffness: 300, damping: 20 }}
                   >
-                    ${totalAmount().toFixed(2)}
+                    ₹{totalAmount().toFixed(0)}
                   </motion.span>
                 </AnimatePresence>
               </div>

@@ -6,8 +6,6 @@ services:
     environment:
       POSTGRES_USER: root1
       POSTGRES_PASSWORD: password
-    ports:
-      - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
@@ -20,8 +18,6 @@ services:
   redis:
     image: redis:7-alpine
     container_name: blooms-redis
-    ports:
-      - "6379:6379"
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 5s
@@ -31,17 +27,14 @@ services:
   kafka:
     image: confluentinc/cp-kafka:7.6.0
     container_name: blooms-kafka
-    ports:
-      - "9092:9092"
-      - "29092:29092"
     environment:
       KAFKA_NODE_ID: 1
       KAFKA_PROCESS_ROLES: broker,controller
       KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
       KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
-      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093,PLAINTEXT_HOST://0.0.0.0:29092
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       CLUSTER_ID: MkU3OEVBNTcwNTJENDM2Qk
@@ -55,8 +48,6 @@ services:
   user-service:
     build: ./backend/user-service
     container_name: blooms-user-service
-    ports:
-      - "8081:8081"
     environment:
       JWT_SECRET: ${JWT_SECRET}
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/blooms_user
@@ -69,8 +60,6 @@ services:
   catalog-service:
     build: ./backend/catalog-service
     container_name: blooms-catalog-service
-    ports:
-      - "8082:8082"
     environment:
       JWT_SECRET: ${JWT_SECRET}
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/blooms_catalog
@@ -87,14 +76,13 @@ services:
   cart-service:
     build: ./backend/cart-service
     container_name: blooms-cart-service
-    ports:
-      - "8083:8083"
     environment:
       JWT_SECRET: ${JWT_SECRET}
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/blooms_cart
       SPRING_DATASOURCE_USERNAME: root1
       SPRING_DATASOURCE_PASSWORD: password
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      CATALOG_SERVICE_URL: http://catalog-service:8082
     depends_on:
       postgres:
         condition: service_healthy
@@ -104,14 +92,15 @@ services:
   order-service:
     build: ./backend/order-service
     container_name: blooms-order-service
-    ports:
-      - "8084:8084"
     environment:
       JWT_SECRET: ${JWT_SECRET}
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/blooms_order
       SPRING_DATASOURCE_USERNAME: root1
       SPRING_DATASOURCE_PASSWORD: password
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      CATALOG_SERVICE_URL: http://catalog-service:8082
+      INVENTORY_SERVICE_URL: http://inventory-service:8085
+      CART_SERVICE_URL: http://cart-service:8083
     depends_on:
       postgres:
         condition: service_healthy
@@ -121,8 +110,6 @@ services:
   inventory-service:
     build: ./backend/inventory-service
     container_name: blooms-inventory-service
-    ports:
-      - "8085:8085"
     environment:
       JWT_SECRET: ${JWT_SECRET}
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/blooms_inventory
@@ -135,8 +122,6 @@ services:
   notification-service:
     build: ./backend/notification-service
     container_name: blooms-notification-service
-    ports:
-      - "8086:8086"
     environment:
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
     depends_on:
@@ -147,7 +132,7 @@ services:
     image: nginx:alpine
     container_name: blooms-nginx-gateway
     ports:
-      - "8080:8080"
+      - "8180:8080"
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
       - ./cors-headers.conf:/etc/nginx/cors-headers.conf:ro
@@ -162,7 +147,7 @@ services:
     build: ./frontend
     container_name: blooms-frontend
     ports:
-      - "3000:80"
+      - "3100:80"
     depends_on:
       - nginx-gateway
 

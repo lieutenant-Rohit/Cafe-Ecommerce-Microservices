@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Coffee, Croissant, Flame, Timer, ArrowRight, ArrowUpRight, Sparkles, Star, Heart, Zap, Leaf } from 'lucide-react'
+import { Coffee, Croissant, Flame, Timer, ArrowRight, ArrowUpRight, Sparkles, Star, Leaf } from 'lucide-react'
 import { Hero2 } from '../components/ui/hero-2'
 import Marquee from '../components/ui/marquee'
 import Reveal from '../components/ui/reveal'
@@ -18,7 +18,7 @@ import { AnimatedGroup } from '../components/motion-primitives/animated-group'
 import CoffeeMeter from '../components/ui/coffee-meter'
 import { useCafeStatus } from '../hooks/useCafeStatus'
 import ParticleField from '../components/particle-field'
-import TextScramble from '../components/text-scramble'
+
 import GlitchText from '../components/glitch-text'
 import LiquidBlob from '../components/liquid-blob'
 import OrbitingElements from '../components/orbiting-elements'
@@ -32,9 +32,10 @@ const tickerItems = [
   'Cortados, double shot',
   'Tiramisu, layered last night',
   'Cold brew, steeped 18 hours',
-  'Chai with real cardamom',
+  'Masala chai with real cardamom',
   'Blueberry muffins still warm',
   'Matcha, whisked to order',
+  'Rajpur Road specials every weekend',
 ]
 
 const pillars = [
@@ -66,10 +67,10 @@ const stats = [
 ]
 
 const featuredItems = [
-  { name: 'Cinnamon Roll', price: 4.25, category: 'Pastries', desc: 'Rolled at 6 a.m., glazed while still warm. One batch a day — gone by noon.', image: '/images/products/cinnamon-roll.jpg' },
-  { name: 'Cortado', price: 4.0, category: 'Hot Beverages', desc: 'A double shot pulled to order, cut with a short pour of steamed milk.', image: '/images/products/espresso.jpg' },
-  { name: 'Tiramisu', price: 6.5, category: 'Desserts', desc: 'Layered the night before, dusted with cocoa just before service.', image: '/images/products/tiramisu.jpg' },
-  { name: 'Croissant', price: 3.75, category: 'Pastries', desc: 'Twenty-seven layers of butter. Laminated yesterday, baked this morning.', image: '/images/products/croissant.jpg' },
+  { name: 'Cinnamon Roll', price: 175, category: 'Pastries', desc: 'Rolled at 6 a.m., glazed while still warm. One batch a day — gone by noon.', image: '/images/products/cinnamon-roll.jpg' },
+  { name: 'Cortado', price: 160, category: 'Hot Beverages', desc: 'A double shot pulled to order, cut with a short pour of steamed milk.', image: '/images/products/espresso.jpg' },
+  { name: 'Tiramisu', price: 250, category: 'Desserts', desc: 'Layered the night before, dusted with cocoa just before service.', image: '/images/products/tiramisu.jpg' },
+  { name: 'Croissant', price: 150, category: 'Pastries', desc: 'Twenty-seven layers of butter. Laminated yesterday, baked this morning.', image: '/images/products/croissant.jpg' },
 ]
 
 const processSteps = [
@@ -80,12 +81,12 @@ const processSteps = [
 ]
 
 const testimonials = [
-  { text: 'The cinnamon roll tastes like it was made for me personally. I moved my morning meeting to arrive before they run out.', author: 'Sarah M., regular since 2021' },
-  { text: 'Best cortado on the block. You can taste that the beans were roasted this week.', author: 'James K.' },
-  { text: 'I watched them roll the dough at 6:30. This place runs on a different clock — an earlier one.', author: 'Emily R.' },
-  { text: 'Cold brew that tastes like cold brew, not like a bottled apology. Every single time.', author: 'Priya S.' },
-  { text: 'The chai is made from scratch — cardamom and all. My Thursday ritual for two years now.', author: 'Daniel O.' },
-  { text: "I've driven across town in the rain for their scones. Worth every red light.", author: 'Maya L.' },
+  { text: 'The cinnamon roll tastes like it was made for me personally. I moved my morning meeting to arrive before they run out.', author: 'Priya S., regular since 2022' },
+  { text: 'Best cortado on Rajpur Road. You can taste that the beans were roasted this week.', author: 'Rahul M.' },
+  { text: 'I watched them roll the dough at 6:30. This place runs on a different clock — an earlier one.', author: 'Ananya K.' },
+  { text: 'Cold brew that tastes like cold brew, not like a bottled apology. Every single time.', author: 'Deepak T.' },
+  { text: 'The masala chai is made from scratch — cardamom and all. My Thursday ritual for two years now.', author: 'Neha G.' },
+  { text: "I've driven across town in the rain for their scones. Worth every red light.", author: 'Vikram P.' },
 ]
 
 const photos = [
@@ -123,8 +124,8 @@ export default function Home() {
       {/* Masthead strip */}
       <section aria-hidden="true" className="relative z-10 bg-cream-50 text-coffee-900 py-3.5 overflow-hidden">
         <div className="flex items-center">
-          <span className="shrink-0 pl-5 pr-4 text-[10px] font-semibold uppercase tracking-[0.3em] text-primary-600">
-            Morning edition
+            <span className="shrink-0 pl-5 pr-4 text-[10px] font-semibold uppercase tracking-[0.3em] text-primary-600">
+            Rajpur Road, Dehradun
           </span>
           <div className="min-w-0 flex-1">
             <Marquee
@@ -136,7 +137,7 @@ export default function Home() {
             />
           </div>
           <span className="hidden md:block shrink-0 pl-4 pr-5 text-[10px] font-semibold uppercase tracking-[0.3em] text-coffee-400">
-            24 seats · est. 2019
+            40 seats · est. 2021
           </span>
         </div>
       </section>
@@ -151,7 +152,8 @@ export default function Home() {
               <div className="max-w-2xl">
                 <Kicker>What we make</Kicker>
                 <h2 className="mt-4 font-display text-4xl md:text-6xl font-semibold leading-[1.02] text-coffee-900">
-                  <TextScramble text="Three arts, practiced" speed={25} tag="span" />{' '}
+                  Three arts, practiced
+                  <br />
                   <em className="italic text-primary-600">every morning.</em>
                 </h2>
               </div>
@@ -260,7 +262,7 @@ export default function Home() {
             </Reveal>
             <div className="grid grid-cols-2 gap-x-10 gap-y-12">
               {stats.map((s) => (
-                <div key={s.label} className="group" >
+                <div key={s.label} className="group">
                   <div className="font-display text-5xl md:text-6xl font-semibold text-cream-50">
                     <NumberTicker value={s.value} suffix={s.suffix} duration={1.6} />
                   </div>
@@ -366,21 +368,13 @@ export default function Home() {
 
       {/* 05 — How it's made */}
       <section className="relative overflow-hidden bg-cream-50 py-20 md:py-28">
-        <Parallax from={-28} to={28} className="absolute inset-0 h-full w-full" style={{ scale: 1.1 }}>
-          <img
-            src="/backgrounds/blob-section.svg"
-            alt=""
-            aria-hidden="true"
-            className="absolute inset-0 h-full w-full object-cover opacity-80"
-          />
-        </Parallax>
         <Grain opacity={0.07} />
         <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <Reveal>
             <div className="text-center">
               <Kicker>From dark oven to open doors</Kicker>
               <h2 className="mt-4 font-display text-4xl md:text-5xl font-semibold leading-[1.05] text-coffee-900">
-                <TextScramble text="The morning," speed={20} tag="span" />{' '}
+                The morning,{' '}
                 <em className="italic text-primary-600">step by step.</em>
               </h2>
               <p className="mt-4 text-coffee-500 max-w-md mx-auto leading-relaxed">
@@ -468,14 +462,6 @@ export default function Home() {
 
       {/* CTA */}
       <section className="relative overflow-hidden bg-coffee-950 py-20 md:py-28">
-        <Parallax from={0} to={90} className="absolute inset-0 h-full w-full" style={{ scale: 1.16 }}>
-          <img
-            src="/backgrounds/cta-bg.svg"
-            alt=""
-            aria-hidden="true"
-            className="absolute inset-0 h-full w-full object-cover"
-          />
-        </Parallax>
         <BlobMesh variant="deep" className="opacity-80" />
         <Grain opacity={0.1} className="z-[6]" />
         <LiquidBlob className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-10" color="#DBEDE2" size={700} />

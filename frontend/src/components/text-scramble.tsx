@@ -36,8 +36,8 @@ export default function TextScramble({
       const newDisplay = chars.map((char, i) => {
         if (resolved[i]) return resolved[i]
         if (char === ' ') {
-          resolved[i] = ' '
-          return ' '
+          resolved[i] = '\u00A0'
+          return '\u00A0'
         }
         // How many frames until this char resolves
         const resolveAt = i * 1
@@ -54,7 +54,7 @@ export default function TextScramble({
 
       if (resolved.every((r) => r !== '') || frame > chars.length + 20) {
         clearInterval(interval)
-        setDisplay(chars)
+        setDisplay(chars.map(c => c === ' ' ? '\u00A0' : c))
       }
     }, speed)
 

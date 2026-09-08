@@ -80,7 +80,7 @@ const DEFAULT_NAV: NavLink[] = [
 const DEFAULT_SOCIAL: SocialLink[] = [
     { label: "Instagram", href: "https://instagram.com" },
     { label: "Facebook", href: "https://facebook.com" },
-    { label: "17 Meadow St.", href: "#" },
+    { label: "Rajpur Rd., Dehradun", href: "#" },
 ];
 
 function HeaderLink({ link, active, hovered, onSelect, onHover }: {
@@ -135,7 +135,7 @@ export function Hero2({
         </Badge>
     ),
     headlineAccent = "blooms with flavor.",
-    description = "Hand-pulled espresso, oat-milk lattes, and cinnamon rolls still warm from the 5 a.m. oven. When a batch is gone, it's gone — everything small-batch, everything this morning.",
+    description = "Hand-pulled espresso, masala chai, and cinnamon rolls still warm from the 5 a.m. oven. When a batch is gone, it's gone — everything small-batch, everything this morning.",
     primaryCtaLabel = "See the Menu",
     primaryCtaHref = "/menu",
     secondaryCtaLabel = "Join the Morning List",
@@ -363,7 +363,7 @@ export function Hero2({
                             </div>
                             <div className="absolute -right-4 top-1/3 hidden lg:block animate-float" style={{ animationDuration: '11s' }}>
                                 <div className="bg-primary-600 text-cream-50 rounded-2xl px-4 py-3 shadow-lg shadow-primary-600/30">
-                                    <p className="font-display text-lg font-semibold">$4.25</p>
+                                    <p className="font-display text-lg font-semibold">₹175</p>
                                     <p className="text-[11px] text-cream-100/80">fresh &amp; warm</p>
                                 </div>
                             </div>

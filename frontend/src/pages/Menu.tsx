@@ -107,7 +107,7 @@ function ProductCard({ product, onAdd }: { product: Product; onAdd: (p: Product)
             animate={{ scale: 1, rotate: 0 }}
             transition={{ type: 'spring', stiffness: 400, damping: 15, delay: 0.2 }}
           >
-            ${product.price.toFixed(2)}
+            ₹{product.price.toFixed(0)}
           </motion.span>
 
           {/* Stock indicator */}
@@ -140,52 +140,47 @@ function ProductCard({ product, onAdd }: { product: Product; onAdd: (p: Product)
               </span>
             )}
           </p>
+        </div>
 
+        {/* Circular + button bottom-right */}
+        {product.stockQuantity > 0 && (
           <motion.button
             onClick={handleAdd}
-            disabled={product.stockQuantity === 0 || added}
-            whileTap={{ scale: 0.95 }}
-            className="mt-4 w-full py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 relative overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled={added}
+            whileTap={{ scale: 0.85 }}
+            className="absolute bottom-4 right-4 w-10 h-10 rounded-full bg-primary-600 hover:bg-primary-500 text-cream-50 flex items-center justify-center shadow-lg shadow-primary-600/25 transition-colors disabled:opacity-70"
           >
             <AnimatePresence mode="wait">
               {added ? (
-                <motion.span
-                  key="added"
-                  initial={{ y: 16, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  exit={{ y: -16, opacity: 0 }}
-                  transition={{ duration: 0.2 }}
-                  className="flex items-center justify-center gap-1.5 bg-accent-600 text-cream-50 rounded-xl"
+                <motion.svg
+                  key="check"
+                  initial={{ scale: 0, rotate: -90 }}
+                  animate={{ scale: 1, rotate: 0 }}
+                  exit={{ scale: 0 }}
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
                 >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
-                  </svg>
-                  Added!
-                </motion.span>
-              ) : product.stockQuantity > 0 ? (
-                <motion.span
-                  key="add"
-                  initial={{ y: 16, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  exit={{ y: -16, opacity: 0 }}
-                  transition={{ duration: 0.2 }}
-                  className="block bg-primary-600 hover:bg-primary-500 text-cream-50 rounded-xl"
-                >
-                  Add to Cart
-                </motion.span>
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                </motion.svg>
               ) : (
-                <motion.span
-                  key="unavailable"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="block bg-cream-200 text-coffee-400 rounded-xl"
+                <motion.svg
+                  key="plus"
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  exit={{ scale: 0 }}
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
                 >
-                  Unavailable
-                </motion.span>
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 5v14M5 12h14" />
+                </motion.svg>
               )}
             </AnimatePresence>
           </motion.button>
-        </div>
+        )}
       </div>
     </motion.div>
   )

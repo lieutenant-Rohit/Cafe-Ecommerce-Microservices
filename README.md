@@ -1,6 +1,6 @@
 # BloomCafeV2
 
-A full-stack cafe ordering platform built with a **microservices backend** (Java / Spring Boot) and a **React SPA frontend**. Customers can browse the menu, manage their cart, and place orders — while admins manage products, categories, inventory, orders, and users through a dedicated admin panel.
+A full-stack cafe ordering platform built with a **microservices backend** (Java / Spring Boot) and a **React SPA frontend**. Located on **Rajpur Road, Dehradun**. Customers can browse the menu, manage their cart, and place orders — while admins manage products, categories, inventory, orders, and users through a dedicated admin panel.
 
 ---
 
@@ -9,30 +9,30 @@ A full-stack cafe ordering platform built with a **microservices backend** (Java
 ```bash
 git clone https://github.com/lieutenant-Rohit/BloomCafeV2.git
 cd BloomCafeV2
-docker-compose up --build
+docker compose up --build
 ```
 
 Wait for all services to start (first build takes a few minutes). Then open:
 
-- **Frontend:** http://localhost:3000
-- **API Gateway:** http://localhost:8080
+- **Frontend:** http://localhost:3100
+- **API Gateway:** http://localhost:8180
 
 To stop everything:
 ```bash
-docker-compose down
+docker compose down
 ```
 
 To stop and wipe the database:
 ```bash
-docker-compose down -v
+docker compose down -v
 ```
 
 ### What's running
 
 | Service | Port | Description |
 |---------|------|-------------|
-| Frontend | 3000 | React SPA served by Nginx |
-| Nginx Gateway | 8080 | Reverse proxy, routes `/api/*` to backend |
+| Frontend | 3100 | React SPA served by Nginx |
+| Nginx Gateway | 8180 | Reverse proxy, routes `/api/*` to backend |
 | User Service | 8081 | Auth, JWT, user management |
 | Catalog Service | 8082 | Products, categories, Redis cache |
 | Cart Service | 8083 | Shopping cart, Kafka consumer |
@@ -91,12 +91,12 @@ docker-compose down -v
 ```
                          ┌─────────────────────────────────┐
                          │      Frontend (React + Nginx)   │
-                         │          http://:3000           │
+                         │          http://:3100           │
                          └──────────────┬──────────────────┘
                                         │ /api/*
                                         ▼
                          ┌─────────────────────────────────┐
-                         │     Nginx API Gateway (:8080)   │
+                         │     Nginx API Gateway (:8180)   │
                          │   CORS  ·  Routing  ·  JWT      │
                          └──┬───┬───┬───┬───┬──────────────┘
                             │   │   │   │   │
@@ -171,7 +171,7 @@ docker-compose down -v
 
 ## Creating an Account
 
-The app doesn't seed any users. To get started, register at http://localhost:3000/register, then promote yourself to admin:
+The app doesn't seed any users. To get started, register at http://localhost:3100/register, then promote yourself to admin:
 
 ```sql
 -- Connect to the database
@@ -240,7 +240,7 @@ If you prefer running services locally:
 
 ### 1. Start infrastructure
 ```bash
-docker-compose up -d redis kafka
+docker compose up -d redis kafka
 ```
 
 ### 2. Create databases

@@ -88,7 +88,7 @@ function OrderCard({ order, index }: { order: Order; index: number }) {
             <div className="flex items-center gap-3 text-xs text-coffee-400">
               <span className="flex items-center gap-1">
                 <Clock className="w-3 h-3" />
-                {new Date(order.createdAt).toLocaleDateString('en-US', {
+                {new Date(order.createdAt).toLocaleDateString('en-IN', {
                   month: 'short',
                   day: 'numeric',
                   hour: '2-digit',
@@ -101,7 +101,7 @@ function OrderCard({ order, index }: { order: Order; index: number }) {
 
           {/* Total + expand */}
           <div className="flex items-center gap-3 shrink-0">
-            <span className="text-lg font-bold text-coffee-900">${total.toFixed(2)}</span>
+            <span className="text-lg font-bold text-coffee-900">₹{total.toFixed(0)}</span>
             <motion.div
               animate={{ rotate: expanded ? 180 : 0 }}
               transition={{ duration: 0.2 }}
@@ -172,7 +172,7 @@ function OrderCard({ order, index }: { order: Order; index: number }) {
                           <p className="text-xs text-coffee-400">Qty: {item.quantity}</p>
                         </div>
                       </div>
-                      <span className="text-sm font-semibold text-coffee-900">${(item.price * item.quantity).toFixed(2)}</span>
+                      <span className="text-sm font-semibold text-coffee-900">₹{(item.price * item.quantity).toFixed(0)}</span>
                     </div>
                   ))}
                 </div>
@@ -180,7 +180,7 @@ function OrderCard({ order, index }: { order: Order; index: number }) {
                 {/* Total */}
                 <div className="mt-3 pt-3 border-t border-cream-100 flex justify-between items-center">
                   <span className="text-sm font-medium text-coffee-500">Order Total</span>
-                  <span className="text-xl font-bold text-coffee-900">${total.toFixed(2)}</span>
+                  <span className="text-xl font-bold text-coffee-900">₹{total.toFixed(0)}</span>
                 </div>
               </div>
             </motion.div>

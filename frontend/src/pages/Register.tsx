@@ -123,7 +123,7 @@ export default function Register() {
             value={address}
             onChange={(e) => setAddress(e.target.value)}
             className={inputClass}
-            placeholder="123 Main St"
+            placeholder="42, Rajpur Road, Dehradun"
           />
         </div>
 
