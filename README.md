@@ -112,54 +112,7 @@ docker compose down -v
 
 ## Architecture
 
-```
-                         ┌─────────────────────────────────┐
-                         │      Frontend (React + Nginx)   │
-                         │          http://:3100           │
-                         └──────────────┬──────────────────┘
-                                        │ /api/*
-                                        ▼
-                         ┌─────────────────────────────────┐
-                         │     Nginx API Gateway (:8180)   │
-                         │   CORS  ·  Routing  ·  JWT      │
-                         └──┬───┬───┬───┬───┬──────────────┘
-                            │   │   │   │   │
-                ┌───────────┘   │   │   │   └──────────┐
-                ▼               ▼   │   ▼              ▼
-          ┌──────────┐  ┌──────────┐│┌──────────┐  ┌────────────┐
-          │  User    │  │ Catalog  │││  Order   │  │ Inventory  │
-          │ (:8081)  │  │ (:8082)  │││ (:8084)  │  │  (:8085)   │
-          └────┬─────┘  └────┬─────┘│└────┬─────┘  └─────┬──────┘
-               │             │      │     │              │
-               │             │  ┌───┘     │              │
-               │             │  │  ┌──────┘              │
-               │             │  ▼  ▼                     │
-               │             │ ┌──────────┐              │
-               │             │ │  Cart    │              │
-               │             │ │ (:8083)  │              │
-               │             │ └────┬─────┘              │
-               │             │      │                    │
-               │             │      │    ┌───────────┐   │
-               │             │      └───►│Inventory  │◄──┘
-               │             │           │ Reserve   │
-               │             │           └─────┬─────┘
-               │             │                 │
-               │             │      ┌──────────┘
-               │             │      ▼
-               │             │  ┌──────────────┐
-               │             │  │ Notification │
-               │             │  │  (:8086)     │
-               │             │  │  WebSocket   │
-               │             │  └──────────────┘
-               │             │
-               ▼             ▼
-          ┌──────────────────────────────┐
-          │     PostgreSQL Databases     │
-          │  blooms_user · blooms_catalog│
-          │  blooms_cart  · blooms_order │
-          │  blooms_inventory            │
-          └──────────────────────────────┘
-```
+![Architecture](bloomcafe-architecture.svg)
 
 **Communication patterns:**
 - **Synchronous (REST):** Cart → Catalog (product validation), Order → Cart/Catalog/Inventory (checkout orchestration)
