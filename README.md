@@ -45,6 +45,31 @@ docker compose down -v
 
 ---
 
+## Screenshots
+
+### Homepage
+![Homepage Hero](ss/hero.png)
+
+### Register
+![Register](ss/register.png)
+
+### Login
+![Login](ss/login.png)
+
+### Menu
+![Menu](ss/menu.png)
+
+### Shopping Cart
+![Shopping Cart](ss/cart.png)
+
+### Order Success
+![Order Success](ss/order-success.png)
+
+### My Orders
+![My Orders](ss/my-orders.png)
+
+---
+
 ## Tech Stack
 
 ### Frontend

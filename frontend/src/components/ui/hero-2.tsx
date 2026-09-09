@@ -135,7 +135,7 @@ export function Hero2({
         </Badge>
     ),
     headlineAccent = "blooms with flavor.",
-    description = "Hand-pulled espresso, masala chai, and cinnamon rolls still warm from the 5 a.m. oven. When a batch is gone, it's gone — everything small-batch, everything this morning.",
+    description = "Since 2021, before the city wakes. Croissants folded twenty-seven layers deep, masala chai crushed fresh every pour, and cinnamon rolls that don't survive the morning.",
     primaryCtaLabel = "See the Menu",
     primaryCtaHref = "/menu",
     secondaryCtaLabel = "Join the Morning List",
