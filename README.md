@@ -47,6 +47,9 @@ docker compose down -v
 
 ## Screenshots
 
+### My Orders
+![My Orders](ss/my-orders.png)
+
 ### Homepage
 ![Homepage Hero](ss/hero.png)
 
@@ -64,9 +67,6 @@ docker compose down -v
 
 ### Order Success
 ![Order Success](ss/order-success.png)
-
-### My Orders
-![My Orders](ss/my-orders.png)
 
 ---
 
