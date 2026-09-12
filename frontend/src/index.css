@@ -216,5 +216,13 @@ canvas {
   .animate-glitch-2 {
     animation: glitch-2 0.3s ease-in-out;
   }
+  .animate-shimmer {
+    animation: shimmer 2s infinite;
+  }
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
 }
 

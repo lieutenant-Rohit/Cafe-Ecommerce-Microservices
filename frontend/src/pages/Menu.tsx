@@ -7,9 +7,11 @@ import { fetchProducts, fetchProductsByCategory } from '../api/productApi'
 import useCartStore from '../store/cartStore'
 import Pagination from '../components/ui/Pagination'
 import Reveal from '../components/ui/reveal'
+import Tilt from '../components/ui/tilt'
 import { AnimatedGroup } from '../components/motion-primitives/animated-group'
 import { Magnetic } from '../components/motion-primitives/magnetic'
 import { BorderTrail } from '../components/motion-primitives/border-trail'
+import { Spotlight } from '../components/motion-primitives/spotlight'
 
 
 function BlurImage({ src, alt, className }: { src: string; alt: string; className?: string }) {
@@ -79,13 +81,15 @@ function ProductCard({ product, onAdd }: { product: Product; onAdd: (p: Product)
       transition={{ duration: 0.4 }}
       className="h-full"
     >
-      <div className="relative bg-white rounded-2xl border border-cream-200 overflow-hidden h-full group hover:shadow-xl hover:shadow-primary-900/5 hover:-translate-y-1 transition-all duration-500">
-        <BorderTrail
-          className="opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-          radius={16}
-          size={2}
-          color="rgba(169,78,44,0.3)"
-        />
+      <Tilt intensity={6} className="h-full">
+        <div className="relative bg-white rounded-2xl border border-cream-200 overflow-hidden h-full group hover:shadow-xl hover:shadow-primary-900/5 hover:-translate-y-1 transition-all duration-500">
+          <BorderTrail
+            className="opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+            radius={16}
+            size={2}
+            color="rgba(169,78,44,0.3)"
+          />
+          <Spotlight size={200} className="opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
         <div className="aspect-[4/3] bg-cream-100 overflow-hidden relative">
           {product.imageUrl ? (
             <BlurImage
@@ -182,6 +186,7 @@ function ProductCard({ product, onAdd }: { product: Product; onAdd: (p: Product)
           </motion.button>
         )}
       </div>
+      </Tilt>
     </motion.div>
   )
 }

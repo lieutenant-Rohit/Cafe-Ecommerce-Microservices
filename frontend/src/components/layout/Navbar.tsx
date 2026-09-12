@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom'
 import { AnimatePresence, motion, useMotionValueEvent, useScroll } from 'motion/react'
 import useAuthStore from '../../store/authStore'
 import useCartStore from '../../store/cartStore'
+import { Magnetic } from '../motion-primitives/magnetic'
 
 function CartBadge({ count }: { count: number }) {
   return (
@@ -32,10 +33,14 @@ function CartBadge({ count }: { count: number }) {
 
 function NavLinkItem({ to, label, isActive }: { to: string; label: string; isActive: boolean }) {
   return (
-    <Link to={to} className="relative py-2 text-sm font-medium transition-colors">
-      <span className={isActive ? 'text-primary-600 font-semibold' : 'text-coffee-700 hover:text-primary-600'}>
+    <Link to={to} className="relative py-2 text-sm font-medium transition-colors group">
+      <motion.span
+        className={isActive ? 'text-primary-600 font-semibold' : 'text-coffee-700 group-hover:text-primary-600'}
+        whileHover={{ y: -1 }}
+        transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+      >
         {label}
-      </span>
+      </motion.span>
       {isActive && (
         <motion.span
           layoutId="navbar-active-indicator"
@@ -97,12 +102,14 @@ export default function Navbar() {
           </div>
 
           <div className="flex items-center gap-4">
-            <Link to="/cart" className="relative text-coffee-700 hover:text-primary-600 transition-colors">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z" />
-              </svg>
-              <CartBadge count={totalItems} />
-            </Link>
+            <Magnetic intensity={0.2} range={40}>
+              <Link to="/cart" className="relative text-coffee-700 hover:text-primary-600 transition-colors">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z" />
+                </svg>
+                <CartBadge count={totalItems} />
+              </Link>
+            </Magnetic>
 
             {isAuthenticated ? (
               <div className="hidden md:flex items-center gap-3">
@@ -178,37 +185,69 @@ export default function Navbar() {
             transition={{ type: 'spring', stiffness: 300, damping: 30 }}
             className="md:hidden overflow-hidden bg-cream-50/95 backdrop-blur-xl border-t border-cream-200"
           >
-            <div className="px-4 py-4 space-y-3">
-              <Link to="/" className="block py-2 text-coffee-700 hover:text-primary-600 font-medium transition-colors">
-                Home
-              </Link>
-              <Link to="/menu" className="block py-2 text-coffee-700 hover:text-primary-600 font-medium transition-colors">
-                Menu
-              </Link>
+            <div className="px-4 py-4 space-y-1">
+              {['/', '/menu'].map((path, i) => (
+                <motion.div
+                  key={path}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.05 }}
+                >
+                  <Link
+                    to={path}
+                    className="block py-3 text-coffee-700 hover:text-primary-600 font-medium transition-colors"
+                  >
+                    {path === '/' ? 'Home' : 'Menu'}
+                  </Link>
+                </motion.div>
+              ))}
               {isAuthenticated && (
                 <>
-                  <Link to="/my-orders" className="block py-2 text-coffee-700 hover:text-primary-600 font-medium transition-colors">
-                    My Orders
-                  </Link>
-                  {isAdmin && (
-                    <Link to="/admin" className="block py-2 text-accent-600 font-medium transition-colors">
-                      Dashboard
+                  <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.1 }}
+                  >
+                    <Link to="/my-orders" className="block py-3 text-coffee-700 hover:text-primary-600 font-medium transition-colors">
+                      My Orders
                     </Link>
+                  </motion.div>
+                  {isAdmin && (
+                    <motion.div
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.15 }}
+                    >
+                      <Link to="/admin" className="block py-3 text-accent-600 font-medium transition-colors">
+                        Dashboard
+                      </Link>
+                    </motion.div>
                   )}
-                  <button onClick={logout} className="block py-2 text-coffee-400 hover:text-red-600 font-medium transition-colors">
-                    Logout
-                  </button>
+                  <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.2 }}
+                  >
+                    <button onClick={logout} className="block py-3 text-coffee-400 hover:text-red-600 font-medium transition-colors">
+                      Logout
+                    </button>
+                  </motion.div>
                 </>
               )}
               {!isAuthenticated && (
-                <div className="flex gap-3 pt-2">
-                  <Link to="/login" className="flex-1 text-center py-2 border border-cream-300 rounded-lg text-coffee-700 hover:bg-cream-100 font-medium transition-colors">
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.15 }}
+                  className="flex gap-3 pt-3"
+                >
+                  <Link to="/login" className="flex-1 text-center py-2.5 border border-cream-300 rounded-lg text-coffee-700 hover:bg-cream-100 font-medium transition-colors">
                     Login
                   </Link>
-                  <Link to="/register" className="flex-1 text-center py-2 bg-primary-600 text-cream-50 rounded-lg font-medium hover:bg-primary-500 transition-colors">
+                  <Link to="/register" className="flex-1 text-center py-2.5 bg-primary-600 text-cream-50 rounded-lg font-medium hover:bg-primary-500 transition-colors">
                     Sign Up
                   </Link>
-                </div>
+                </motion.div>
               )}
             </div>
           </motion.div>

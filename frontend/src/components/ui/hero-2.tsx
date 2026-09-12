@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { AnimatePresence, motion, type Variants } from "motion/react";
 import { Link } from "react-router-dom";
-import { ArrowRight, ArrowDown, ChevronDown, Croissant, Star, Coffee } from "lucide-react";
+import { ArrowRight, ArrowDown, ChevronDown, Croissant, Star, Coffee, Leaf, Flame } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -334,20 +334,20 @@ export function Hero2({
                                         alt="Cinnamon roll, glazed while still warm"
                                         className="h-full w-full object-cover scale-[1.12] group-hover:scale-[1.18] transition-transform duration-[1200ms]"
                                     />
-                                    <div className="absolute inset-0 bg-gradient-to-b from-coffee-950/55 via-transparent to-transparent" />
+                                    <div className="absolute inset-0 bg-gradient-to-b from-coffee-950/60 via-coffee-950/10 to-coffee-950/40" />
                                     <div className="absolute top-0 inset-x-0 p-6">
                                         <p className="text-xs uppercase tracking-[0.2em] text-cream-200/85">Shot at 6:40 a.m.</p>
                                         <p className="font-display text-2xl text-cream-50 mt-1 max-w-[80%]">
                                             Cinnamon roll, glazed while warm
                                         </p>
                                     </div>
-                                    {/* steam */}
+                                    {/* enhanced steam */}
                                     <div className="absolute top-8 right-8 flex flex-col items-center gap-3 opacity-80" aria-hidden="true">
-                                        {[0, 1, 2].map((i) => (
+                                        {[0, 1, 2, 3].map((i) => (
                                             <span
                                                 key={i}
                                                 className="w-1 h-8 rounded-full bg-cream-100/70 blur-[2px] animate-[steamDrift_4s_ease-in-out_infinite]"
-                                                style={{ animationDelay: `${i * 1.2}s` }}
+                                                style={{ animationDelay: `${i * 0.9}s` }}
                                             />
                                         ))}
                                     </div>
@@ -417,6 +417,16 @@ export function Hero2({
                                 className="absolute -right-12 top-1/4 w-4 h-4 text-coffee-400/70 animate-float"
                                 style={{ animationDuration: '10s', animationDelay: '1.5s' }}
                             />
+                            <Leaf
+                                aria-hidden="true"
+                                className="absolute -left-8 top-1/4 w-3.5 h-3.5 text-accent-400/60 animate-float"
+                                style={{ animationDuration: '11s', animationDelay: '0.5s' }}
+                            />
+                            <Flame
+                                aria-hidden="true"
+                                className="absolute -right-8 bottom-1/3 w-3.5 h-3.5 text-primary-300/50 animate-float"
+                                style={{ animationDuration: '9s', animationDelay: '2.5s' }}
+                            />
                             <span
                                 aria-hidden="true"
                                 className="absolute left-[58%] -top-7 w-2 h-2 rounded-full bg-accent-500/80 shadow-[0_0_10px_rgba(59,130,104,0.8)] animate-float"
@@ -426,6 +436,16 @@ export function Hero2({
                                 aria-hidden="true"
                                 className="absolute -right-6 bottom-1/4 w-2.5 h-2.5 rounded-full bg-primary-400/70 shadow-[0_0_10px_rgba(211,126,88,0.8)] animate-float"
                                 style={{ animationDuration: '9s', animationDelay: '2s' }}
+                            />
+                            <span
+                                aria-hidden="true"
+                                className="absolute left-1/4 -bottom-4 w-1.5 h-1.5 rounded-full bg-coffee-400/60 shadow-[0_0_8px_rgba(111,78,55,0.6)] animate-float"
+                                style={{ animationDuration: '12s', animationDelay: '3s' }}
+                            />
+                            <span
+                                aria-hidden="true"
+                                className="absolute -left-4 bottom-1/2 w-3 h-3 rounded-full bg-cream-300/40 shadow-[0_0_12px_rgba(229,209,178,0.5)] animate-float"
+                                style={{ animationDuration: '14s', animationDelay: '1.8s' }}
                             />
                         </div>
                     </div>
@@ -440,13 +460,14 @@ export function Hero2({
                 >
                     <div className="flex items-center gap-8 lg:gap-14 w-full md:w-auto justify-center md:justify-start">
                         {socialLinks.map((social) => (
-                            <a
-                                key={social.label}
-                                href={social.href}
-                                className="text-coffee-500/80 hover:text-coffee-900 text-sm md:text-base transition-colors"
-                            >
-                                {social.label}
-                            </a>
+                            <Magnetic key={social.label} intensity={0.15} range={40}>
+                                <a
+                                    href={social.href}
+                                    className="text-coffee-500/80 hover:text-coffee-900 text-sm md:text-base transition-colors"
+                                >
+                                    {social.label}
+                                </a>
+                            </Magnetic>
                         ))}
                     </div>
                     <div className="flex items-center gap-2 text-coffee-500/80 text-sm md:text-base cursor-pointer group w-full md:w-auto justify-center md:justify-end">

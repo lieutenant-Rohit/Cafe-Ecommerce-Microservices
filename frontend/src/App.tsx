@@ -4,6 +4,7 @@ import useAuthStore from './store/authStore'
 import useCartStore from './store/cartStore'
 import SmoothScroll from './components/smooth-scroll'
 import SplashScreen from './components/splash-screen'
+import ScrollProgress from './components/ui/scroll-progress'
 
 function App() {
   const [showSplash, setShowSplash] = useState(true)
@@ -28,6 +29,7 @@ function App() {
   return (
     <>
       {showSplash && <SplashScreen onComplete={handleSplashComplete} />}
+      <ScrollProgress />
       <SmoothScroll>
         <AppRouter />
       </SmoothScroll>

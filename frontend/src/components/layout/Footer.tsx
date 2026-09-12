@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { motion } from 'motion/react'
-import { ArrowRight, MapPin, Clock, Phone, Mail, Coffee } from 'lucide-react'
+import { ArrowRight, MapPin, Clock, Phone, Mail, Coffee, Send } from 'lucide-react'
 import Reveal from '../ui/reveal'
 import { Magnetic } from '../motion-primitives/magnetic'
 import { BorderTrail } from '../motion-primitives/border-trail'
@@ -59,6 +59,27 @@ export default function Footer() {
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary-600/5 rounded-full blur-3xl" />
         <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-accent-600/5 rounded-full blur-3xl" />
+        {/* Floating bean particles */}
+        {[...Array(6)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-1 h-1 rounded-full bg-primary-400/30"
+            style={{
+              left: `${15 + i * 15}%`,
+              top: `${20 + (i % 3) * 25}%`,
+            }}
+            animate={{
+              y: [0, -20, 0],
+              opacity: [0.2, 0.5, 0.2],
+            }}
+            transition={{
+              duration: 4 + i * 0.5,
+              repeat: Infinity,
+              delay: i * 0.8,
+              ease: 'easeInOut',
+            }}
+          />
+        ))}
       </div>
 
       {/* Newsletter band */}
@@ -82,8 +103,8 @@ export default function Footer() {
                     className="w-full md:w-72 bg-cream-50/10 border border-cream-200/20 rounded-full px-5 py-3 text-sm text-cream-50 placeholder:text-cream-200/40 focus:outline-none focus:border-primary-500/50 focus:ring-1 focus:ring-primary-500/20 transition-all"
                   />
                   <Magnetic intensity={0.2} range={60}>
-                    <button className="absolute right-1 bg-primary-600 hover:bg-primary-500 text-cream-50 rounded-full p-2.5 transition-colors">
-                      <ArrowRight className="w-4 h-4" />
+                    <button className="absolute right-1 bg-primary-600 hover:bg-primary-500 text-cream-50 rounded-full p-2.5 transition-colors flex items-center gap-1.5 group">
+                      <Send className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                     </button>
                   </Magnetic>
                 </div>
