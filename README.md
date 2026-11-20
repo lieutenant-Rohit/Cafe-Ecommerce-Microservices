@@ -44,31 +44,6 @@ docker compose down -v
 | Kafka | 9092 | Async inter-service messaging |
 
 ---
-
-## Screenshots
-
-![Intro](ss/my-orders.png)
-
-### Homepage
-![Homepage Hero](ss/hero.png)
-
-### Register
-![Register](ss/register.png)
-
-### Login
-![Login](ss/login.png)
-
-### Menu
-![Menu](ss/menu.png)
-
-### Shopping Cart
-![Shopping Cart](ss/cart.png)
-
-### Order Success
-![Order Success](ss/order-success.png)
-
----
-
 ## Tech Stack
 
 ### Frontend
