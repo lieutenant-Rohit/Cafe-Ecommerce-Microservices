@@ -19,6 +19,7 @@ public class OrderService {
     private final CartClient cartClient;
     private final InventoryClient inventoryClient;
     private final CatalogClient catalogClient;
+    private final UserClient userClient;
     private final OrderEventPublisher orderEventPublisher;
 
     public OrderService(
@@ -26,12 +27,14 @@ public class OrderService {
             CartClient cartClient,
             InventoryClient inventoryClient,
             CatalogClient catalogClient,
+            UserClient userClient,
             OrderEventPublisher orderEventPublisher) {
 
         this.orderRepository = orderRepository;
         this.cartClient = cartClient;
         this.inventoryClient = inventoryClient;
         this.catalogClient = catalogClient;
+        this.userClient = userClient;
         this.orderEventPublisher = orderEventPublisher;
     }
 
@@ -135,10 +138,15 @@ public class OrderService {
         // 8. Now save the order.
         Order savedOrder = orderRepository.save(order);
 
-        // 9. Publish OrderCreated event to Kafka
+        // 9. Fetch the authenticated user's email for notification
+        String userEmail = userClient.getCurrentUser().email();
+
+        // 10. Publish OrderCreated event to Kafka
         OrderCreatedEvent event = new OrderCreatedEvent(
+                java.util.UUID.randomUUID().toString(),
                 savedOrder.getId(),
                 savedOrder.getUserId(),
+                userEmail,
                 savedOrder.getItems().stream()
                         .map(item -> new OrderCreatedEvent.OrderItemEvent(
                                 item.getProductId(),
@@ -177,6 +185,11 @@ public class OrderService {
     public List<Order> getOrdersByUserId(Long userId) {
 
         return orderRepository.findByUserId(userId);
+    }
+
+    public List<Order> getAllOrders() {
+
+        return orderRepository.findAll();
     }
 
     public Order updateOrderStatus(

@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public record OrderCreatedEvent(
+        String eventId,
         Long orderId,
         Long userId,
         List<OrderItemEvent> items,
@@ -16,4 +17,3 @@ public record OrderCreatedEvent(
     ) {
     }
 }
-

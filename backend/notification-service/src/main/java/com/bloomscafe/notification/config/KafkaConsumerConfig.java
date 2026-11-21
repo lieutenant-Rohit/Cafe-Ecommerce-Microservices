@@ -1,63 +1,74 @@
 package com.bloomscafe.notification.config;
 
-import org.apache.kafka.clients.consumer.ConsumerConfig;
-import org.apache.kafka.common.serialization.StringDeserializer;
-import org.springframework.beans.factory.annotation.Value;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
-import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.listener.DeadLetterPublishingRecoverer;
+import org.springframework.kafka.listener.DefaultErrorHandler;
+import org.springframework.kafka.support.ExponentialBackOffWithMaxRetries;
 
-import java.util.HashMap;
-import java.util.Map;
-
+/**
+ * Kafka consumer error handling configuration.
+ *
+ * When a message fails to process, it is retried with exponential backoff.
+ * After all retries are exhausted, the message is published to a dead-letter
+ * topic (order-created-dlt) for manual inspection.
+ *
+ * This works alongside the consumer-side idempotency check (processed_events table)
+ * to ensure messages are never silently dropped.
+ */
 @Configuration
 public class KafkaConsumerConfig {
 
-    @Value("${spring.kafka.bootstrap-servers}")
-    private String bootstrapServers;
+    private static final String DLQ_TOPIC = "order-created-dlt";
 
-    @Value("${spring.kafka.consumer.group-id}")
-    private String groupId;
-
+    /**
+     * Configures the error handler with retry and dead-letter publishing.
+     *
+     * Retry strategy: 3 attempts with exponential backoff (1s, 2s, 4s).
+     * After 3 failed attempts, the message is sent to the DLQ topic.
+     */
     @Bean
-    public ConsumerFactory<String, String> consumerFactory() {
+    public DefaultErrorHandler kafkaErrorHandler(KafkaTemplate<String, String> kafkaTemplate) {
 
-        Map<String, Object> properties = new HashMap<>();
+        // Exponential backoff: 1s, 2s, 4s between retries
+        ExponentialBackOffWithMaxRetries backOff =
+                new ExponentialBackOffWithMaxRetries(3);
+        backOff.setInitialInterval(1000L);
+        backOff.setMultiplier(2.0);
+        backOff.setMaxInterval(4000L);
 
-        properties.put(
-                ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
-                bootstrapServers
-        );
+        // Dead-letter publishing: after retries are exhausted, publish to DLQ
+        DeadLetterPublishingRecoverer recoverer =
+                new DeadLetterPublishingRecoverer(kafkaTemplate,
+                        (record, exception) -> {
+                            System.err.println(
+                                    "Dead-lettering message from topic "
+                                            + record.topic()
+                                            + " to DLQ: " + DLQ_TOPIC
+                                            + ". Reason: " + exception.getMessage()
+                            );
+                            return new org.apache.kafka.common.TopicPartition(
+                                    DLQ_TOPIC,
+                                    record.partition()
+                            );
+                        });
 
-        properties.put(
-                ConsumerConfig.GROUP_ID_CONFIG,
-                groupId
-        );
-
-        properties.put(
-                ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
-                StringDeserializer.class
-        );
-
-        properties.put(
-                ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
-                StringDeserializer.class
-        );
-
-        return new DefaultKafkaConsumerFactory<>(properties);
+        return new DefaultErrorHandler(recoverer, backOff);
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, String>
-    kafkaListenerContainerFactory() {
+    public ConcurrentKafkaListenerContainerFactory<Object, Object> kafkaListenerContainerFactory(
+            ConsumerFactory<Object, Object> consumerFactory,
+            DefaultErrorHandler kafkaErrorHandler) {
 
-        ConcurrentKafkaListenerContainerFactory<String, String> factory =
+        ConcurrentKafkaListenerContainerFactory<Object, Object> factory =
                 new ConcurrentKafkaListenerContainerFactory<>();
-
-        factory.setConsumerFactory(consumerFactory());
-
+        factory.setConsumerFactory(consumerFactory);
+        factory.setCommonErrorHandler(kafkaErrorHandler);
         return factory;
     }
 }

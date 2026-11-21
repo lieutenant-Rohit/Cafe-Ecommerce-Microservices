@@ -45,6 +45,10 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "/api/orders/**")
                         .hasRole("ADMIN")
 
+                        // Admin order overview
+                        .requestMatchers(HttpMethod.GET, "/api/orders/all")
+                        .hasRole("ADMIN")
+
                         // Order APIs require logged-in user
                         .requestMatchers("/api/orders/**")
                         .hasAnyRole("CUSTOMER", "ADMIN")

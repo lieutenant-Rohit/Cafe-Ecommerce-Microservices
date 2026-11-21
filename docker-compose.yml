@@ -18,6 +18,10 @@ services:
   redis:
     image: redis:7-alpine
     container_name: blooms-redis
+    ports:
+      # Host 6380 avoids clashing with a locally running Redis on 6379.
+      # Services inside the compose network still use redis:6379.
+      - "${REDIS_PORT:-6380}:6379"
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 5s
@@ -27,14 +31,16 @@ services:
   kafka:
     image: confluentinc/cp-kafka:7.6.0
     container_name: blooms-kafka
+    ports:
+      - "${KAFKA_PORT:-19092}:29092"
     environment:
       KAFKA_NODE_ID: 1
       KAFKA_PROCESS_ROLES: broker,controller
       KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
       KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
-      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093,EXTERNAL://0.0.0.0:29092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,EXTERNAL://localhost:${KAFKA_PORT:-19092}
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,EXTERNAL:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       CLUSTER_ID: MkU3OEVBNTcwNTJENDM2Qk
@@ -49,7 +55,8 @@ services:
     build: ./backend/user-service
     container_name: blooms-user-service
     environment:
-      JWT_SECRET: ${JWT_SECRET}
+      # Local/demo fallback only. Set JWT_SECRET in .env for a real deployment.
+      JWT_SECRET: ${JWT_SECRET:-bloomcafe-local-dev-secret-change-me-please-32chars}
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/blooms_user
       SPRING_DATASOURCE_USERNAME: root1
       SPRING_DATASOURCE_PASSWORD: password
@@ -61,7 +68,8 @@ services:
     build: ./backend/catalog-service
     container_name: blooms-catalog-service
     environment:
-      JWT_SECRET: ${JWT_SECRET}
+      # Local/demo fallback only. Set JWT_SECRET in .env for a real deployment.
+      JWT_SECRET: ${JWT_SECRET:-bloomcafe-local-dev-secret-change-me-please-32chars}
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/blooms_catalog
       SPRING_DATASOURCE_USERNAME: root1
       SPRING_DATASOURCE_PASSWORD: password
@@ -77,7 +85,8 @@ services:
     build: ./backend/cart-service
     container_name: blooms-cart-service
     environment:
-      JWT_SECRET: ${JWT_SECRET}
+      # Local/demo fallback only. Set JWT_SECRET in .env for a real deployment.
+      JWT_SECRET: ${JWT_SECRET:-bloomcafe-local-dev-secret-change-me-please-32chars}
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/blooms_cart
       SPRING_DATASOURCE_USERNAME: root1
       SPRING_DATASOURCE_PASSWORD: password
@@ -93,7 +102,8 @@ services:
     build: ./backend/order-service
     container_name: blooms-order-service
     environment:
-      JWT_SECRET: ${JWT_SECRET}
+      # Local/demo fallback only. Set JWT_SECRET in .env for a real deployment.
+      JWT_SECRET: ${JWT_SECRET:-bloomcafe-local-dev-secret-change-me-please-32chars}
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/blooms_order
       SPRING_DATASOURCE_USERNAME: root1
       SPRING_DATASOURCE_PASSWORD: password
@@ -101,6 +111,7 @@ services:
       CATALOG_SERVICE_URL: http://catalog-service:8082
       INVENTORY_SERVICE_URL: http://inventory-service:8085
       CART_SERVICE_URL: http://cart-service:8083
+      USER_SERVICE_URL: http://user-service:8081
     depends_on:
       postgres:
         condition: service_healthy
@@ -111,7 +122,8 @@ services:
     build: ./backend/inventory-service
     container_name: blooms-inventory-service
     environment:
-      JWT_SECRET: ${JWT_SECRET}
+      # Local/demo fallback only. Set JWT_SECRET in .env for a real deployment.
+      JWT_SECRET: ${JWT_SECRET:-bloomcafe-local-dev-secret-change-me-please-32chars}
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/blooms_inventory
       SPRING_DATASOURCE_USERNAME: root1
       SPRING_DATASOURCE_PASSWORD: password
@@ -124,7 +136,22 @@ services:
     container_name: blooms-notification-service
     environment:
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/blooms_notification
+      SPRING_DATASOURCE_USERNAME: root1
+      SPRING_DATASOURCE_PASSWORD: password
+      # Default to mock so the stack runs without SMTP errors.
+      # Set NOTIFICATION_EMAIL_MOCK=false in .env after configuring a valid Gmail app password.
+      NOTIFICATION_EMAIL_MOCK: ${NOTIFICATION_EMAIL_MOCK:-true}
+      SPRING_MAIL_HOST: smtp.gmail.com
+      SPRING_MAIL_PORT: 587
+      SPRING_MAIL_USERNAME: ${GMAIL_SMTP_USER:-}
+      SPRING_MAIL_PASSWORD: ${GMAIL_SMTP_PASS:-}
+      SPRING_MAIL_PROPERTIES_MAIL_SMTP_AUTH: "true"
+      SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE: "true"
+      SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_REQUIRED: "true"
     depends_on:
+      postgres:
+        condition: service_healthy
       kafka:
         condition: service_healthy
 
@@ -132,7 +159,7 @@ services:
     image: nginx:alpine
     container_name: blooms-nginx-gateway
     ports:
-      - "8180:8080"
+      - "${GATEWAY_PORT:-8180}:8080"
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
       - ./cors-headers.conf:/etc/nginx/cors-headers.conf:ro
@@ -147,7 +174,7 @@ services:
     build: ./frontend
     container_name: blooms-frontend
     ports:
-      - "3100:80"
+      - "${FRONTEND_PORT:-3100}:80"
     depends_on:
       - nginx-gateway
 

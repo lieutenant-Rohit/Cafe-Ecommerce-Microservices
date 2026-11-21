@@ -63,6 +63,15 @@ public class OrderController {
         );
     }
 
+    // GET: http://localhost:8084/api/orders/all  (ADMIN only)
+    @GetMapping("/all")
+    public ResponseEntity<List<Order>> getAllOrders() {
+
+        return ResponseEntity.ok(
+                orderService.getAllOrders()
+        );
+    }
+
     // GET: http://localhost:8084/api/orders
     @GetMapping
     public ResponseEntity<List<Order>> getOrdersByUserId(

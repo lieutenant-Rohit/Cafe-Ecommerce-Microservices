@@ -19,7 +19,7 @@ export default function SplashScreen({ onComplete }: { onComplete: () => void })
     <AnimatePresence>
       {phase !== 'exit' ? (
         <motion.div
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-coffee-950 overflow-hidden"
+          className="fixed inset-0 z-[100] flex items-center justify-center overflow-hidden bg-coffee-900"
           exit={{ opacity: 0 }}
           transition={{ duration: 0.6, ease: 'easeInOut' }}
         >
@@ -32,7 +32,7 @@ export default function SplashScreen({ onComplete }: { onComplete: () => void })
           <motion.div
             className="absolute w-[600px] h-[600px] rounded-full opacity-20"
             style={{
-              background: 'radial-gradient(circle, #A94E2C 0%, transparent 70%)',
+              background: 'radial-gradient(circle, #D92F8D 0%, transparent 70%)',
             }}
             initial={{ scale: 0, opacity: 0 }}
             animate={{ scale: [0, 1.2, 1], opacity: [0, 0.3, 0.2] }}
@@ -53,9 +53,7 @@ export default function SplashScreen({ onComplete }: { onComplete: () => void })
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.5, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
               >
-                Bloom
-                <span className="text-primary-500">s</span>
-                <span className="font-light italic">Cafe</span>
+                Blooms<span className="text-primary-400">Cafe</span>
               </motion.h1>
             </motion.div>
 
@@ -67,7 +65,7 @@ export default function SplashScreen({ onComplete }: { onComplete: () => void })
             >
               <div className="w-8 h-px bg-cream-200/30" />
               <p className="text-[10px] uppercase tracking-[0.35em] text-cream-200/60 font-medium">
-                est. 2019
+                Rajpur Road · est. 2021
               </p>
               <div className="w-8 h-px bg-cream-200/30" />
             </motion.div>
